@@ -25,17 +25,6 @@ set_background_color('rgb(210,180,140)')
 set_window_color('rgb(23,23,23)')
 set_scale(1.0)
 
-#Block Class
-class Block(Entity):
-    def __init__(self,x=0,y=0,color=color.blue, texture='assets/textures/grass_side.png', **kwargs):
-        super().__init__(self, **kwargs)
-        self.color=color
-        self.x=x
-        self.y=y
-        self.scale=0.05
-        self.texture=texture
-
-
 #Variables
 falling = False
 collider_objects = []
@@ -43,11 +32,21 @@ gravity = 0
 velocity = 0
 speed = 0.003
 ground=0
+
+#Block Class
+def Block(x=0,y=0,texture='textures/grass_side.png'):
+    block = Entity(x=x,y=y,texture=texture, scale=0.05)
+    collider_objects.append(block)
+
+
 def update():
     sky.x = camera.x * 1
     sky.y = camera.y * 1
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
+
+
+    #Start Player Movement
     if held_keys['d']:
         player.x += speed
         player.texture='textures/player_right.png'
@@ -66,6 +65,7 @@ def update():
         velocity-=.1
     if held_keys['shift']:
         player.x += (held_keys['d'] - held_keys['a']) * speed
+    #End Player Movement
 
 def input(key):
     if key == 'space' and not falling:
@@ -76,5 +76,6 @@ def input(key):
 
 player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
-grass = Block(texture='textures/grass_side.png')
+block = Block(x=0.2)
+block = Block(x=-0.2)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
