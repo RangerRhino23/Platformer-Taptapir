@@ -33,6 +33,7 @@ gravity = 0
 velocity = 0
 speed = 0.003
 ground=0
+colliding=False
 
 
 #Block Class
@@ -48,16 +49,22 @@ def update():
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
     for e in collider_objects:
-        if player.y>=e.ypos and player.x>=e.x-.05 and player.x<=e.x+.05:
-            ground=e.ypos
-        else:
-            ground = 0
+        if e.x>0:
+            if player.y>=e.ypos and player.x>=e.x-.05 and player.x<=e.x+.05:
+                ground=e.ypos
+            else:
+                ground = 0
+        elif e.x<0:
+            if player.y>=e.ypos and player.x>=e.x+.05 and player.x<=e.x-.05:
+                ground=e.ypos
+            else:
+                ground = 0  
 
     #Start Player Movement
-    if held_keys['d']:
+    if held_keys['d'] and not colliding:
         player.x += speed
         player.texture='textures/player_right.png'
-    if held_keys['a']:
+    if held_keys['a'] and not colliding:
         player.x -= speed
         player.texture='textures/player_left.png'
 
