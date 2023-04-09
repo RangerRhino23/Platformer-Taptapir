@@ -35,7 +35,6 @@ speed = 0.005
 ground=0
 colliding=False
 
-
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
     return Entity(x=x,y=y,z=player.z,texture=texture, scale=0.05,ypos=y+.05)
@@ -49,12 +48,12 @@ def update():
     camera.y = lerp(camera.y, player.y+.2, .025)
     for e in collider_objects:
         if e.x>0:
-            if player.y>=e.ypos and player.x>=e.x-.05 and player.x<=e.x+.05:
+            if player.y>=e.ypos and player.x>=e.x-.042 and player.x<=e.x+.042:
                 ground=e.ypos
             else:
                 ground = 0
         elif e.x<0:
-            if player.y>=e.ypos and player.x>=e.x+.05 and player.x<=e.x-.05:
+            if player.y>=e.ypos and player.x>=e.x+.042 and player.x<=e.x-.042:
                 ground=e.ypos
             else:
                 ground = 0  
