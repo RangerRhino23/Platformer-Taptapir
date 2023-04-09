@@ -445,7 +445,6 @@ function dict(values={}) {
 var scripts = document.getElementsByTagName("script")
 for (var script of scripts) {
     if (script.type == 'text/sunsnake') {
-        print('compile:', script)
         if (script.textContent) {
             compiled_code = compile(script.textContent)
             eval(compiled_code)
