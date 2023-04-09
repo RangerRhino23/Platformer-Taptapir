@@ -41,6 +41,8 @@ def update():
     if velocity>0:
         player.y+=.007
         velocity-=.1
+    if held_keys['shift']:
+        player.x += (held_keys['d'] - held_keys['a']) * speed
 
 def input(key):
     if key == 'space' and not falling:
@@ -51,4 +53,5 @@ def input(key):
 
 player = Entity(texture='textures/player.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
+grass = Entity(texture='textures/grass_side.png',scale=.05)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
