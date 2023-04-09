@@ -27,7 +27,7 @@ set_scale(1.0)
 
 
 #Variables
-falling = False
+jumping = False
 collider_objects = []
 gravity = 0
 velocity = 0
@@ -37,16 +37,21 @@ ground=0
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
-    block = Entity(x=x,y=y,texture=texture, scale=0.05)
+    block = Entity(x=x,y=y,z=player.z,texture=texture, scale=0.05,ypos=y+.05)
     collider_objects.append(block)
 
 
 def update():
+    print(player.y)
     sky.x = camera.x * 1
     sky.y = camera.y * 1
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
-
+    for e in collider_objects:
+        if player.y>=e.ypos and player.x>=e.x-.05 and player.x<=e.x+.05:
+            ground=e.ypos
+        else:
+            ground = 0
 
     #Start Player Movement
     if held_keys['d']:
@@ -56,12 +61,12 @@ def update():
         player.x -= speed
         player.texture='textures/player_left.png'
 
-    if falling and velocity <= 0:
+    if velocity <= 0:
         if player.y >= ground:
             gravity += 0.001
             player.y -= 0.003 + gravity
         if player.y <= ground:
-            falling=False
+            jumping=False
             player.y=ground
     if velocity>0:
         player.y+=velocity/60
@@ -71,11 +76,11 @@ def update():
     #End Player Movement
 
 def input(key):
-    if key == 'space' and not falling:
+    if key == 'space' and not jumping:
         ground=player.y
         velocity = 1
         gravity = 0
-        falling = True
+        jumping = True
 
 player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
