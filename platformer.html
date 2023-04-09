@@ -5,45 +5,46 @@
     <title>Mario | RangerRhino23</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
     <link rel="icon" type="image/x-icon" href="icon.ico">
-    <style>
-        html {
-            background-color:tan;
-        }
-    </style>
   </head>
     <script src="taptapir/taptapir.js"></script>
     <script type="text/sunsnake">
 
 #Global Functions
-set_orientation('horizontal')
+set_orientation('landscape')
+set_background_color('rgb(210,180,140)')
 set_window_color('rgb(23,23,23)')
-set_scale(1.01)
+set_scale(1.0)
 
 #Variables
 falling = False
 collider_objects = []
 gravity = 0
-
+velocity = 0
+speed = 0.003
+ground=0
 def update():
+    print(mario.y)
     if held_keys['d']:
-        mario.x += 0.003
+        mario.x += speed
     if held_keys['a']:
-        mario.x -= 0.003
+        mario.x -= speed
 
-    
-    if falling == True:
-        if mario.y != goBackTo:
+    if falling and velocity <= 0:
+        if mario.y >= ground:
             gravity += 0.0001
             mario.y -= 0.0003 + gravity
-        if mario.y <= goBackTo:
-            falling = False
+        if mario.y <= ground:
+            falling=False
+    if velocity>0:
+        mario.y+=.01
+        velocity-=.1
 
 def input(key):
-    if key == 'space':
-        goBackTo = mario.y
-        falling = True
+    if key == 'space' and not falling:
+        ground=mario.y
+        velocity = 1
         gravity = 0
-        mario.y += 0.1
+        falling = True
 
 mario = Entity(texture='assets/textures/player.png', scale=0.05)
 
