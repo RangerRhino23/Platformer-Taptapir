@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mario | RangerRhino23</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <style>
+        html {
+            background-color:tan;
+        }
+    </style>
+  </head>
+    <script src="taptapir/taptapir.js"></script>
+    <script type="text/sunsnake">
+
+#Global Functions
+set_orientation('horizontal')
+set_window_color('rgb(23,23,23)')
+set_scale(1.01)
+
+#Variables
+falling = False
+collider_objects = []
+gravity = 0
+
+def update():
+    if held_keys['d']:
+        mario.x += 0.003
+    if held_keys['a']:
+        mario.x -= 0.003
+
+    
+    if falling == True:
+        if mario.y != goBackTo:
+            gravity += 0.0001
+            mario.y -= 0.0003 + gravity
+        if mario.y <= goBackTo:
+            falling = False
+
+def input(key):
+    if key == 'space':
+        goBackTo = mario.y
+        falling = True
+        gravity = 0
+        mario.y += 0.1
+
+mario = Entity(texture='assets/textures/mario.png', scale=0.05)
+
+    </script><script src="taptapir/sunsnake_compiler.js"></script></html>
