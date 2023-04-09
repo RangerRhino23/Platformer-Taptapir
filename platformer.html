@@ -52,8 +52,6 @@ def update():
     for e in collider_objects:
         if player.x >= e.x - 0.05 and player.y == e.y:
             collidingRight = True
-        elif player.x <= e.x + 0.05 and player.y == e.y:
-            collidingLeft = True
         if e.x > 0:
             if player.y >= e.ypos and player.x >= e.x - 0.042 and player.x <= e.x + 0.042:
                 ground = max(ground, e.ypos)
