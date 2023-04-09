@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mario | RangerRhino23</title>
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <title>Platformer | RangerRhino23</title>
     <link rel="icon" type="image/x-icon" href="icon.ico">
   </head>
     <script src="taptapir/taptapir.js"></script>
     <script type="text/sunsnake">
 
 #Global Functions
+ASSETS_FOLDER = 'assets/'
 set_orientation('landscape')
 set_background_color('rgb(210,180,140)')
 set_window_color('rgb(23,23,23)')
@@ -23,29 +23,32 @@ velocity = 0
 speed = 0.003
 ground=0
 def update():
-    print(mario.y)
+    sky.x = camera.x * 1
+    sky.y = camera.y * 1
+    camera.x = lerp(camera.x, player.x, .025)
+    camera.y = lerp(camera.y, player.y+.2, .025)
     if held_keys['d']:
-        mario.x += speed
+        player.x += speed
     if held_keys['a']:
-        mario.x -= speed
+        player.x -= speed
 
     if falling and velocity <= 0:
-        if mario.y >= ground:
+        if player.y >= ground:
             gravity += 0.0001
-            mario.y -= 0.0003 + gravity
-        if mario.y <= ground:
+            player.y -= 0.0003 + gravity
+        if player.y <= ground:
             falling=False
     if velocity>0:
-        mario.y+=.01
+        player.y+=.007
         velocity-=.1
 
 def input(key):
     if key == 'space' and not falling:
-        ground=mario.y
+        ground=player.y
         velocity = 1
         gravity = 0
         falling = True
 
-mario = Entity(texture='assets/textures/player.png', scale=0.05)
-
+player = Entity(texture='textures/player.png', scale=0.05)
+sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
