@@ -5,6 +5,16 @@
     <title>Platformer | RangerRhino23</title>
     <link rel="icon" type="image/x-icon" href="icon.ico">
   </head>
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function (event) {
+    if (event.keyCode == 123) {
+        return false;}}
+    document.addEventListener('keydown', function(event) {
+    if (event.shiftKey) {
+        return false;}});
+  </script>
+  
     <script src="taptapir/taptapir.js"></script>
     <script type="text/sunsnake">
 
@@ -29,8 +39,10 @@ def update():
     camera.y = lerp(camera.y, player.y+.2, .025)
     if held_keys['d']:
         player.x += speed
+        player.texture='textures/player_right.png'
     if held_keys['a']:
         player.x -= speed
+        player.texture='textures/player_left.png'
 
     if falling and velocity <= 0:
         if player.y >= ground:
