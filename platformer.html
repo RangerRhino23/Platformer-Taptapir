@@ -42,12 +42,15 @@ def Block(x=0,y=0,texture='textures/grass_side.png'):
 
 
 def update():
+    speed = 0.005
     ground = 0
     sky.x = camera.x * 1
     sky.y = camera.y * 1
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
     for e in collider_objects:
+        if player.x>=e.x-0.05 and player.x<=e.x+0.05 and player.y == e.y:
+            speed = 0
         if e.x > 0:
             if player.y >= e.ypos and player.x >= e.x - 0.042 and player.x <= e.x + 0.042:
                 ground = max(ground, e.ypos)
@@ -89,7 +92,7 @@ player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
 temp = Block(x=0.2)
 collider_objects.append(temp)
-block = Block(x=0.3)
+block = Block(x=0.5)
 collider_objects.append(block)
 print(collider_objects)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
