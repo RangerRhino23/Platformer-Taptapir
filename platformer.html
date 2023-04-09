@@ -31,15 +31,14 @@ jumping = False
 collider_objects = []
 gravity = 0
 velocity = 0
-speed = 0.003
+speed = 0.005
 ground=0
 colliding=False
 
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
-    block = Entity(x=x,y=y,z=player.z,texture=texture, scale=0.05,ypos=y+.05)
-    collider_objects.append(block)
+    return Entity(x=x,y=y,z=player.z,texture=texture, scale=0.05,ypos=y+.05)
 
 
 def update():
@@ -91,6 +90,8 @@ def input(key):
 
 player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
-Block(x=-0.2)
-Block(x=0.2)
+temp = Block(x=0.2)
+collider_objects.append(temp)
+block = Block(x=0.25)
+collider_objects.append(block)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
