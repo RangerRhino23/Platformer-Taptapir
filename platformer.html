@@ -29,12 +29,15 @@ set_scale(1.0)
 #Variables
 jumping = False
 collider_objects = []
+moving_blocks = []
 gravity = 0
 velocity = 0
 speed = 0.005
-ground=0
+movingBlockSpeed = 0.002
+groundLevel=0
 collidingLeft=False
 collidingRight=False
+startLevel = False
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
@@ -42,14 +45,25 @@ def Block(x=0,y=0,texture='textures/grass_side.png'):
     collider_objects.append(block)
     return block
 
+#Moving Block Class
+def Moving_Block(x=0,y=0,fromX=0.8,toX=1.2,texture='textures/moving_platform.png'):
+    moving_block = Entity(x=x,y=y,z=player.z,texture=texture,scale=0.05,ypos=y+.05,fromX=fromX,toX=toX, movingRight=True)
+    collider_objects.append(moving_block)
+    moving_blocks.append(moving_block)
+    return moving_block
+
 
 def update():
     speed = 0.005
-    ground = 0
+    ground = groundLevel
+
+    #Smooth Camera Follow
     sky.x = camera.x * 1
     sky.y = camera.y * 1
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
+
+    #Collision Detection
     for e in collider_objects:
         if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y:
             collidingRight=True
@@ -66,7 +80,8 @@ def update():
         if player.y>=e.y+.01:
             collidingRight=False
             collidingLeft=False
-    # Start Player Movement
+    
+    #Player Movement
     if held_keys['d'] and not collidingRight:
         player.x += speed
         collidingLeft=False
@@ -78,8 +93,8 @@ def update():
 
     if velocity <= 0:
         if player.y >= ground:
-            gravity += 0.0005
-            player.y -= 0.001 + gravity
+            gravity += 0.00035
+            player.y -= 0.0007 + gravity
         if player.y <= ground:
             jumping = False
             player.y = ground
@@ -88,7 +103,38 @@ def update():
         velocity -= .1
     if held_keys['shift'] and not collidingLeft and not collidingRight:
         player.x += (held_keys['d'] - held_keys['a']) * speed
-    # End Player Movement
+
+    #Sets the player at the start
+    if startLevel == True:
+        player.x = blockOne.x
+        player.y = blockOne.y + 0.05
+        startLevel = False
+
+    #Death
+    if player.y == 0:
+        startLevel = True
+
+    #Moving Platoform Teleportation
+    for e in moving_blocks:
+        if player.x>=e.x-0.05 and player.x<=e.x+0.05:
+            if player.y<=e.y+0.05:
+                player.x = e.x
+    
+    #Moving Platform Movement
+    for e in moving_blocks:
+        if e.x >= e.toX:
+            e.movingRight = False
+        
+        if e.x<=e.fromX:
+            e.movingRight = True
+        
+        if e.movingRight:
+            if e.x<=e.toX:
+                e.x += movingBlockSpeed
+            
+        if not e.movingRight:
+            if e.x>=e.fromX:
+                e.x -= movingBlockSpeed
 
 def input(key):
     if key == 'space' and not jumping:
@@ -96,10 +142,34 @@ def input(key):
         velocity = 1.2
         gravity = 0
         jumping = True
+    if key == 'g':
+        moving_block.movingRight = False
+    if key == 'f':
+        moving_block.movingRight = True
+    if key == 'b':
+        print(moving_block.x)
+        print(moving_block.toX)
 
 player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
-temp = Block(x=0.2)
-block = Block(x=0.25,y=.05)
-minusblock = Block(x=-.5)
+
+startLevel = True
+###################
+###BUILDING ZONE###
+###################
+
+blockOne = Block(x=0.1,y=0.15)
+blockTwo = Block(x=0.2,y=0.2)
+blockThree = Block(x=0.3,y=0.2)
+blockFour = Block(x=0.4,y=0.3)
+blockFive = Block(x=0.5,y=0.35)
+blockSix = Block(x=0.7,y=0.3)
+movingBlockOne = Moving_Block(x=0.75,y=0.3,fromX=0.75,toX=1.2)
+blockSeven = Block(x=1.25,y=0.3)
+movingBlockTwo = Moving_Block(x=1.3,y=0.4,fromX=1.3,toX=1.6)
+blockEight = Block(x=1.65,y=0.35)
+
+#temp = Block(x=0.2)
+#block = Block(x=0.25,y=.05)
+#minusblock = Block(x=-.5)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
