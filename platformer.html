@@ -85,7 +85,7 @@ def update():
     if velocity > 0:
         player.y += velocity / 60
         velocity -= .1
-    if held_keys['shift']:
+    if held_keys['shift'] and not collidingLeft and not collidingRight:
         player.x += (held_keys['d'] - held_keys['a']) * speed
     # End Player Movement
 
