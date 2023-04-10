@@ -50,16 +50,21 @@ def update():
     camera.x = lerp(camera.x, player.x, .025)
     camera.y = lerp(camera.y, player.y+.2, .025)
     for e in collider_objects:
-        if player.x>=e.x-0.05 and player.x<=e.x+0.05 and player.y == e.y:
-            speed = 0
+        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y:
+            collidingRight=True
+        if player.x<=e.x+0.05 and player.x>=e.x and player.y == e.y:
+            collidingLeft=True
         if e.x > 0:
             if player.y >= e.ypos and player.x >= e.x - 0.042 and player.x <= e.x + 0.042:
                 ground = max(ground, e.ypos)
         elif e.x < 0:
-            if player.y >= e.ypos and player.x >= e.x + 0.042 and player.x <= e.x - 0.042:
+            if player.y >= e.ypos and player.x <= e.x + 0.042 and player.x >= e.x - 0.042:
                 ground = max(ground, e.ypos)
         else:
             ground = max(ground, 0)
+        if player.y>=e.y+.01:
+            collidingRight=False
+            collidingLeft=False
     # Start Player Movement
     if held_keys['d'] and not collidingRight:
         player.x += speed
@@ -97,4 +102,6 @@ temp = Block(x=0.2)
 collider_objects.append(temp)
 block = Block(x=0.5)
 collider_objects.append(block)
+minusblock = Block(x=-.5)
+collider_objects.append(minusblock)
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
