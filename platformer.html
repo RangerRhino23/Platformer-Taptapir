@@ -136,28 +136,28 @@ def update():
         deaths += 1
 
     #Moving Platoform Teleportation
-    for e in moving_blocks:
-        if player.x>=e.x-0.05 and player.x<=e.x+0.05:
-            if player.y<=e.y+0.05:
-                player.x = e.x
-            if player.y>=e.y-0.05 and player.y<=e.y+0.05:
-                player.x = e.x
+    for mv in moving_blocks:
+        if player.x>=mv.x-0.045 and player.x<=mv.x+0.045:
+            if player.y<=mv.y+0.05:
+                player.x = mv.x
+            if player.y>=mv.y-0.05 and player.y<=mv.y+0.05:
+                player.x = mv.x
     
     #Moving Platform Movement
-    for e in moving_blocks:
-        if e.x >= e.toX:
-            e.movingRight = False
+    for mv in moving_blocks:
+        if mv.x >= mv.toX:
+            mv.movingRight = False
         
-        if e.x<=e.fromX:
-            e.movingRight = True
+        if mv.x<=mv.fromX:
+            mv.movingRight = True
         
-        if e.movingRight:
-            if e.x<=e.toX:
-                e.x += movingBlockSpeed
+        if mv.movingRight:
+            if mv.x<=mv.toX:
+                mv.x += movingBlockSpeed
             
-        if not e.movingRight:
-            if e.x>=e.fromX:
-                e.x -= movingBlockSpeed
+        if not mv.movingRight:
+            if mv.x>=mv.fromX:
+                mv.x -= movingBlockSpeed
 
 def input(key):
     if not editorMode:
