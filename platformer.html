@@ -43,6 +43,7 @@ collidingLeft=False
 collidingRight=False
 startLevel = False
 editorMode = False
+FinishedLevelOne = False
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
@@ -166,7 +167,7 @@ def input(key):
             velocity = 1.2
             gravity = 0
             jumping = True
-
+                
 player = Entity(texture='textures/player_right.png', scale=0.05)
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
 
@@ -178,6 +179,9 @@ startLevel = True
 ###BUILDING ZONE###
 ###################
 
+###########
+# Level One
+###########
 blockOne = Block(x=0.1,y=0.15)
 blockTwo = Block(x=0.2,y=0.2)
 blockThree = Block(x=0.3,y=0.2)
@@ -193,10 +197,14 @@ finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.42
 
 def flag():
     dist = distance_2d(player.xy, finishFlag.xy)
-    if dist<=0.025:
-        #script for next level here
-        pass
-
+    if dist<=0.025 and FinishedLevelOne == False:
+        l1.enabled = True
+        FinishedLevelOne = True
+        startLevel = True
+        for e in collider_objects:
+            e.enabled=False
+        for mv in moving_blocks:
+            mv.enabled=False
 intro_part_1 = Button(scale=3, color=color.black, text_color='white', text=`Welcome to the GAME!`, z=-10)
 intro_part_1.on_click = def():
     intro_part_1.enabled = False
@@ -205,8 +213,27 @@ intro_part_2 = Button(scale=3, color=color.black, text_color='white', text=`A ga
 intro_part_2.on_click = def():
     intro_part_2.enabled = False
 
-    
-#temp = Block(x=0.2)
-#block = Block(x=0.25,y=.05)
-#minusblock = Block(x=-.5)
+###########
+# Level Two
+###########
+
+def level2():
+    blockOne = Block(x=0.1,y=0.15)
+
+# Misc stuff
+
+l1 = Button(scale=3, color=color.black, text_color='white', text=`Level 1 complete!`, z=-9)
+l1.on_click = def():
+    l1.enabled = False
+    collider_objects = []  
+    moving_blocks = []
+    level2()
+l1.enabled = False
+l2 = Button(scale=3, color=color.black, text_color='white', text=`Level 1 complete!`, z=-9)
+l2.on_click = def():
+    l2.enabled = False
+    collider_objects = []  
+    moving_blocks = []
+    level3()
+l2.enabled = False
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
