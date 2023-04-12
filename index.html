@@ -13,9 +13,12 @@
     document.addEventListener('keydown', function(event) {
     if (event.shiftKey) {
         return false;}});
+// Audio
 bg_music = new Audio('assets/audio/main music.ogg')
 bg_music.loop = true
 death = new Audio('assets/audio/wilhelmscream.mp3')
+complete = new Audio('assets/audio/LevelDone.mp3')
+
   </script>
   
 <script src="taptapir/taptapir.js"></script>
@@ -98,8 +101,6 @@ def update():
     ground = groundLevel
 
     #Death Counter
-    deaths_text.x = camera.x
-    deaths_text.y = camera.y+.47
     deaths_text.text = `Deaths: ${deaths}`
 
     #Smooth Camera Follow
@@ -140,11 +141,11 @@ def update():
     if held_keys['d'] and not collidingRight and not editorMode:
         player.x += speed
         collidingLeft=False
-        player.texture='textures/player_right.png'
+        player.texture=textureHolder1.texture
     if held_keys['a'] and not collidingLeft and not editorMode:
         player.x -= speed
         collidingRight=False
-        player.texture='textures/player_left.png'
+        player.texture=textureHolder2.texture
 
     if velocity <= 0:
         if player.y >= ground:
@@ -169,7 +170,7 @@ def update():
     if player.y == 0:
         startLevel = True
         deaths += 1
-        death.play();
+        death.play()
 
     #Moving Platoform Teleportation
     for mv in moving_blocks:
@@ -204,10 +205,14 @@ def input(key):
             jumping = True
                 
 player = Entity(texture='textures/player_right.png', scale=0.05)
+
+textureHolder1=Entity(scale=.1,x=999999999999,texture='textures/player_right.png')
+textureHolder2=Entity(scale=.1,x=999999999999,texture='textures/player_left.png')
+
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
 
 deaths = 0
-deaths_text = Text(text='Deaths: 00', text_origin=[0,0], scale=0.75, y=-.85, text_size=5, text_color=color.white, x=-.38)
+deaths_text = Text(parent=camera,text_origin=[0,0], scale=0.75, y=0.4, text_size=5, text_color=color.white)
 
 startLevel = True
 
@@ -248,6 +253,9 @@ def flag():
     elif dist<=0.025 and FinishedLevelOne == True and FinishedLevelTwo == False:
         l2.enabled = True
         FinishedLevelTwo = True
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
         startLevel = True
         for e in collider_objects:
             e.enabled = False
