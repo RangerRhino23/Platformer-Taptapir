@@ -247,19 +247,6 @@ class Entity {
         if (!('type' in options)) {
             options['type'] = 'entity'
         }
-        this.add_to_scene = true
-        if ('add_to_scene' in options) {
-            this.add_to_scene = options['add_to_scene']
-        }
-        if (!this.add_to_scene) {
-            this.el = document.createElement(options['type'])
-            entities.push(this)
-            for (const [key, value] of Object.entries(options)) {
-                this[key] = value
-            }
-            return
-        }
-
         this.el = document.createElement(options['type'])
         this.el.className = options['type']
 
@@ -276,9 +263,7 @@ class Entity {
         entities.push(this)
 
         this.setTimeout_calls = {}
-        if (!('render' in options) || options['render']) {
-            scene.appendChild(this.el)
-        }
+        scene.appendChild(this.el)
         this.children = []
         this._enabled = true
         this.on_enable = null
@@ -466,22 +451,12 @@ class Entity {
             this.model.style.backgroundImage = 'none'
             return
         }
-
-        if (!value.endsWith('.gif') && !value.startsWith('data:')) {    // static image
+        if (!value.endsWith('.gif')) {
             this.model.style.backgroundImage = `url("${ASSETS_FOLDER}${value}")`
-            return
         }
-
-        if (value.endsWith('.gif')) {   // .gif (ensure animation replays on reuse)
+        else {
             this.model.style.backgroundImage = `url("${ASSETS_FOLDER}${value}?${random_int(0,999)}")`   // add random number so the gif restarts when setting .texture again
-            return
         }
-
-        if (value.startsWith('data:')) {
-            this.model.style.backgroundImage = `url("${value}")`
-            return
-        }
-
         this.visible_self = false
     }
 
@@ -534,7 +509,7 @@ class Entity {
     get text_size() {return this._text_size}
     set text_size(value) {
         this._text_size = value
-        this.model.style.fontSize = `${value*scale}vh`
+        this.model.style.fontSize = `${value}vh`
     }
 
     get text_origin() {return this._text_origin}
@@ -560,14 +535,6 @@ class Entity {
     get on_click() {return this._on_click}
     set on_click(value) {
         this._on_click = value
-        if (value && !this.ignore_collision) {
-            this.model.style.pointerEvents = 'auto'
-        }
-        else {this.model.style.pointerEvents = 'none'}
-    }
-    get on_double_click() {return this.ondblclick}
-    set on_double_click(value) {
-        this.ondblclick = value
         if (value && !this.ignore_collision) {
             this.model.style.pointerEvents = 'auto'
         }
@@ -862,16 +829,17 @@ class HealthBar extends Entity {
 }
 class RainbowSlider extends Entity {
     constructor(options=false) {
-        let settings = {min:1, max:5, default:1, color:'#222222', scale:[.8,.05], roundness:.25, show_text:false, show_lines:false, gradient:['#CCCCFF', '#6495ED', '#40E0D0', '#9FE2BF', '#28ccaa'], }
+        let settings = {min:1, max:5, default:1, color:'#222222', bar_color:'bb0505', scale:[.8,.05], roundness:.25, show_text:false, show_lines:false}
+        print('----', Object.entries(options))
         for (const [key, value] of Object.entries(options)) {
+            print(key, value)
             settings[key] = value
         }
         super(settings)
-        this.bar = new Entity({parent:this, origin:[-.5,0], x:-.5, roundness:.25, scale_x:.25})
+        this.bar = new Entity({parent:this, origin:[-.5,0], x:-.5, roundness:.25, scale_x:.25, color:settings['bar_color']})
         this.text_entity = new Entity({parent:this, text:'000', text_color:'#dddddd', color:color.clear, text_origin:[0,0], text_size:2, enabled:settings['show_text']})
-        this.gradient = settings['gradient']
+        this.gradient = ['#CCCCFF', '#6495ED', '#40E0D0', '#9FE2BF', '#28ccaa']
         this.value = settings['default']
-        // this.color = settings['color']
 
         if (settings['show_lines']) {
             this.texture= 'tile.png'
@@ -899,29 +867,10 @@ class RainbowSlider extends Entity {
             this.on_value_changed()
         }
     }
-}
-
-class InputField extends Entity {
-    constructor(options=false) {
-        let settings = {roundness:.5, color:color.smoke, text_size:2, text_color:color.azure, value:''}
-        for (const [key, value] of Object.entries(options)) {
-            settings[key] = value
-        }
-        super(settings)
-        this.input_field = document.createElement('input')
-        this.model.appendChild(this.input_field)
-        this.input_field.onkeyup = () => {
-            if (this.on_value_changed) {
-                this.on_value_changed()
-            }
-        }
-        this.value = settings['value']
-    }
-
-    get value() {return this.input_field.value}
-    set value(x) {
-        if (this.input_field) {
-            this.input_field.value = x
+    get bar_color() {return this.bar.color}
+    set bar_color(value) {
+        if (this.bar) {
+            this.bar.color = value
         }
     }
 }
@@ -955,12 +904,6 @@ function handle_mouse_click(e) {
     mouse.left = true
     element_hit = document.elementFromPoint(e.pageX - window.pageXOffset, e.pageY - window.pageYOffset);
     entity = entities[element_hit.entity_index]
-    print(element_hit, entity.on_click)
-    if (!element_hit || (entity.on_click === undefined)) {
-        mouse.swipe_start_position = mouse.position
-        print('.-', time)
-        time_of_press = time
-    }
 
     // print(element_hit)
     if (element_hit && entity) {
@@ -979,25 +922,7 @@ function handle_mouse_click(e) {
 }
 
 function mouseup(event) {
-    mouse.click_end_position = mouse.position
-    if (time - time_of_press < .15) {
-        diff_x = mouse.position[0] - mouse.swipe_start_position[0]
-        diff_y = mouse.position[1] - mouse.swipe_start_position[1]
-
-        if (diff_x < -.05 && abs(diff_y) < .15) {
-            _input('swipe left')
-        }
-        if (diff_x > .05 && abs(diff_y) < .15) {
-            _input('swipe right')
-        }
-        if (diff_y > .05 && abs(diff_x) < .15) {
-            _input('swipe up')
-        }
-        if (diff_y < -.05 && abs(diff_x) < .15) {
-            _input('swipe down')
-        }
-    }
-
+    // event.preventDefault()
     _input(event)
     mouse.left = false;
     for (var e of entities) {
@@ -1251,37 +1176,32 @@ for (var i = 0; i < all_keys.length; i++) {
 }
 held_keys['mouse left'] = false
 held_keys['mouse middle'] = false
-_renamed_keys = {'arrowdown':'down arrow', 'arrowup':'up arrow', 'arrowleft':'left arrow', 'arrowright':'right arrow', ' ':'space'}
+renamed_keys = {'arrowdown':'down arrow', 'arrowup':'up arrow', 'arrowleft':'left arrow', 'arrowright':'right arrow', ' ':'space'}
 
 input = null
 function _input(event) {
-    if (event instanceof Event) {
-        if (event.type == 'mousewheel') {
-            if (event.deltaY > 0) {key = 'scroll down'}
-            else {key = 'scroll up'}
-        }
-        else if (event.type == 'pointerdown') {
-            if (event.button == 0) {key = 'left mouse down'; mouse.left=true; held_keys['mouse left']=true}
-            else if (event.button == 1) {key = 'middle mouse down'; mouse.middle=true; held_keys['mouse middle']=true}
-        }
-        else if (event.type == 'pointerup') {
-            if (event.button == 0) {key = 'left mouse up'; mouse.left=false; held_keys['mouse left']=false}
-            else if (event.button == 1) {key = 'middle mouse up'; mouse.middle=false; held_keys['mouse middle']=false}
-        }
-
-        else {
-            key = event.key.toLowerCase()
-        }
+    if (event.type == 'mousewheel') {
+        if (event.deltaY > 0) {key = 'scroll down'}
+        else {key = 'scroll up'}
     }
-    else {  // is already a string, like swipe left, etc.
-        key = event
+    else if (event.type == 'pointerdown') {
+        if (event.button == 0) {key = 'left mouse down'; mouse.left=true; held_keys['mouse left']=true}
+        else if (event.button == 1) {key = 'middle mouse down'; mouse.middle=true; held_keys['mouse middle']=true}
+    }
+    else if (event.type == 'pointerup') {
+        if (event.button == 0) {key = 'left mouse up'; mouse.left=false; held_keys['mouse left']=false}
+        else if (event.button == 1) {key = 'middle mouse up'; mouse.middle=false; held_keys['mouse middle']=false}
     }
 
-    if (key in _renamed_keys) {
-        key = _renamed_keys[key]
+    else {
+        key = event.key.toLowerCase()
     }
 
-    if ((event instanceof Event) && event.type == "keyup") {
+    if (key in renamed_keys) {
+        key = renamed_keys[key]
+    }
+
+    if (event.type == "keyup") {
         held_keys[key] = 0
         key = key + ' up'
     }

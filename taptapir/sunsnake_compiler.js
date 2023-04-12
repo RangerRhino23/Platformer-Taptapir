@@ -7,7 +7,6 @@ function compile(script) {
     script = script.replaceAll('(\n', '(')
     script = script.replaceAll('{\n', '{')
     script = script.replaceAll('[\n', '[')
-    script = script.replaceAll(' == ', ' === ')
 
     script = script.replaceAll('.index(', '.indexOf(')
 
@@ -207,7 +206,7 @@ function compile(script) {
             }
         }
 
-        for (var class_name of ['Entity', 'HealthBar', 'RainbowSlider', 'InputField']) {
+        for (var class_name of ['Entity', 'HealthBar', 'RainbowSlider']) {
             if (lines[i].includes(`${class_name}({`)) {
                 continue
             }
@@ -402,18 +401,6 @@ function Array_2d(w, h) {
         tiles[i] = new Array(h);
     }
     return tiles
-}
-function Array_3d(w, h, d) {
-    var arr = new Array(w);
-
-    for (var i = 0; i < w; i++) {
-        arr[i] = new Array(h);
-
-        for (var j = 0; j < h; j++) {
-            arr[i][j] = new Array(d).fill(0);
-        }
-    }
-    return arr;
 }
 // function range(n) {return Array(n).keys()}
 function range(start, stop, step) {
