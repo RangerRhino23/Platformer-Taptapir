@@ -174,7 +174,7 @@ def update():
 
     #Moving Platoform Teleportation
     for mv in moving_blocks:
-        if player.x>=mv.x-0.045 and player.x<=mv.x+0.045:
+        if player.x>=mv.x-0.02 and player.x<=mv.x+0.02:
             if player.y<=mv.y+0.05:
                 player.x = mv.x
             if player.y>=mv.y-0.05 and player.y<=mv.y+0.05:
