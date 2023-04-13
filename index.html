@@ -69,12 +69,11 @@ def Moving_Block(x=0,y=0,fromX=0.8,toX=1.2,texture='textures/moving_platform.png
 
 #Laserbeam Class
 def Laserbeam(x=0,y=0):
-    laserHold=Entity(x=x,y=y,z=player.z,color=color.gray,scale=0.05)
-    laserbeam=Entity(x=x-0.0005,y=y-.1465,scale=[0.025,0.25],color=color.red)
+    laserHold=Entity(x=x,y=y,z=player.z,color=color.gray,scale=0.05,z=-1)
+    laserbeam=Entity(x=x-0.0005,y=y-.1465,scale=[0.025,0.25],color=color.red,z=1)
     collider_objects.append(laserHold)
     laserbeams.append(laserbeam)
-    return laserHold, laserbeam
-
+    return laserbeam, laserHold
 def LaserbeamFunc():
     for la in laserbeams:
         if player.x<=la.x+0.025 and player.x>=la.x-0.025 and player.y<=la.y+.12 and player.y>=la.y-0.12 and la.alpha==1:
@@ -82,19 +81,16 @@ def LaserbeamFunc():
             deaths+=1
 def disabled():
     for la in laserbeams:
-        after 1s:
-            la.alpha=1
-            la.enabled=True
-            enabled()
-            
+        la.alpha=0
+    after 1s:
+        enabled()
 def enabled():
     for la in laserbeams:
-        after 1s:
-            disabled()
-            la.enabled=False
-            la.alpha=0
-after .01s:
-    disabled()
+        la.alpha=1
+    after 1s:
+        disabled()
+
+enabled()
 
 Entity(update=LaserbeamFunc,x=-9999999)
 def update():
@@ -264,12 +260,12 @@ def flag():
 ###########
 # Level Two
 ###########
-
 def level2():
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.23,y=0.26)
-    lass=Laserbeam(x=.16,y=.55)
     blockThree = Block(x=.35, y=0.35)
+    laserOne=Laserbeam(x=.16,y=.55)
+    laserTwo=Laserbeam(x=.6,y=.6)
     movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
 
