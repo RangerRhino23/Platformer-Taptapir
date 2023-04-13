@@ -36,7 +36,6 @@ distance_2d = distance
 def EditorCamera():
     editorMode = True
 
-
 #Variables
 jumping = False
 collider_objects = []
@@ -54,7 +53,7 @@ editorMode = False
 FinishedLevelOne = False
 FinishedLevelTwo = False
 FinishedLevelThree = False
-#EditorCamera()
+
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
     block = Entity(x=x,y=y,z=player.z,texture=texture, scale=0.05,ypos=y+.05)
@@ -78,21 +77,23 @@ def Laserbeam(x=0,y=0):
 
 def LaserbeamFunc():
     for la in laserbeams:
-        dist = distance(player.xy,la.xy)
-        print(dist)
-        if dist<=0.06 and la.visible_self:
+        if player.x<=la.x+0.025 and player.x>=la.x-0.025 and player.y<=la.y+.12 and player.y>=la.y-0.12 and la.alpha==1:
             startLevel = True
+            deaths+=1
 def disabled():
     for la in laserbeams:
         after 1s:
-            la.visible_self=True
+            la.alpha=1
+            la.enabled=True
             enabled()
+            
 def enabled():
     for la in laserbeams:
         after 1s:
             disabled()
-            la.visible_self=False
-after 1s:
+            la.enabled=False
+            la.alpha=0
+after .01s:
     disabled()
 
 Entity(update=LaserbeamFunc,x=-9999999)
@@ -112,7 +113,7 @@ def update():
 
     #Collision Detection
     for e in collider_objects:
-        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y:
+        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5 :
             collidingRight=True
         if player.x<=e.x+0.05 and player.x>=e.x and player.y == e.y:
             collidingLeft=True
@@ -174,10 +175,8 @@ def update():
 
     #Moving Platoform Teleportation
     for mv in moving_blocks:
-        if player.x>=mv.x-0.02 and player.x<=mv.x+0.02:
+        if player.x>=mv.x-0.025 and player.x<=mv.x+0.025 and player.y>=mv.y-0.05 and player.y<=mv.y+0.05:
             if player.y<=mv.y+0.05:
-                player.x = mv.x
-            if player.y>=mv.y-0.05 and player.y<=mv.y+0.05:
                 player.x = mv.x
     
     #Moving Platform Movement
@@ -223,7 +222,7 @@ startLevel = True
 ###########
 # Level One
 ###########
-#lass=Laserbeam(x=.2,y=.5)
+
 def level1():
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
@@ -238,11 +237,9 @@ def level1():
     blockNine = Block(x=1.75,y=0.35)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
 
-level1()
-
 def flag():
     dist = distance_2d(player.xy, finishFlag.xy)
-    if dist<=0.025 and FinishedLevelOne == False:
+    if dist<=0.03 and FinishedLevelOne == False:
         l1.enabled = True
         FinishedLevelOne = True
         startLevel = True
@@ -252,17 +249,17 @@ def flag():
         after 3s:
             bg_music.play()
         for e in collider_objects:
-            e.enabled = False
+            destroy(e)
         for mv in moving_blocks:
-            mv.enabled = False
-    elif dist<=0.025 and FinishedLevelOne == True and FinishedLevelTwo == False:
+            destroy(mv)
+    elif dist<=0.03 and FinishedLevelOne == True and FinishedLevelTwo == False:
         l2.enabled = True
         FinishedLevelTwo = True
         startLevel = True
         for e in collider_objects:
-            e.enabled = False
+            destroy(e)
         for mv in moving_blocks:
-            mv.enabled = False
+            destroy(mv)
 
 ###########
 # Level Two
@@ -270,9 +267,13 @@ def flag():
 
 def level2():
     blockOne = Block(x=0.1,y=0.15)
-    
+    blockTwo = Block(x=0.23,y=0.26)
+    lass=Laserbeam(x=.16,y=.55)
+    blockThree = Block(x=.35, y=0.35)
+    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
 
+level2()
 # Misc stuff
 intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!', z=-10)
 intro_part_1.on_click = def():
