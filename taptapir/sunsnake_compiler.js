@@ -229,7 +229,7 @@ function compile(script) {
 
     // add brackets based on indentation
     current_indent = 0
-    is_in_after_block = false
+    after_statement_indents = []
 
     for (var i=0; i<lines.length; i++) {
         if (i > 0) {
@@ -244,28 +244,20 @@ function compile(script) {
             if (current_line_indent < prev_line_indent) {
                 for (var j of range(current_indent - current_line_indent)) {
                     lines[i-1] += '\n' + '    '.repeat(current_indent-j-1) + '}'
-                    if (is_in_after_block) {
+
+                    if (after_statement_indents.at(-1) === current_indent-j-1) {
                         lines[i-1] += ')'
-                        is_in_after_block = false
+                        after_statement_indents.pop()
                     }
                 }
                 current_indent = current_line_indent
             }
 
             if (lines[i].trimStart().startsWith('after(')) {
-                is_in_after_block = true;
+                after_statement_indents.push(current_indent)
             }
         }
     }
-    new_line = ''
-    for (var j of range(current_indent)) {
-        new_line += '' + '    '.repeat(current_indent-1) + '}'
-        if (is_in_after_block) {
-            new_line += ')'
-            is_in_after_block = false
-        }
-    }
-    lines.push(new_line)
 
 
     var compiled_code = lines.join('\n')
@@ -276,6 +268,7 @@ function compile(script) {
     }
 
     // print('COMPILED CODE:', compiled_code)
+    print('compiled in', performance.now() - t, 'ms')
     return compiled_code
 }
 
@@ -457,6 +450,7 @@ function dict(values={}) {
 var scripts = document.getElementsByTagName("script")
 for (var script of scripts) {
     if (script.type == 'text/sunsnake') {
+        print('compile:', script)
         if (script.textContent) {
             compiled_code = compile(script.textContent)
             eval(compiled_code)

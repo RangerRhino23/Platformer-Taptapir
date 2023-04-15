@@ -315,12 +315,17 @@ class Entity {
 
     get parent() {return this._parent}
     set parent(value) {
-        value.el.appendChild(this.el)
-        if (this._parent) {
+        if (value === scene || value === null) {
+            value.appendChild(this.el)
+        }
+        else {
+            value.el.appendChild(this.el)
+        }
+        if (this._parent && this._parent._children) {
             this._parent.children.remove(self)
         }
         this._parent = value
-        if (!value.children.includes(this)) {
+        if (value._children && !value.children.includes(this)) {
             value.children.push(this)
         }
     }
@@ -1259,7 +1264,7 @@ _renamed_keys = {'arrowdown':'down arrow', 'arrowup':'up arrow', 'arrowleft':'le
 input = null
 function _input(event) {
     if (event instanceof Event) {
-        if (event.type == 'mousewheel') {
+        if (event.type == 'wheel') {
             if (event.deltaY > 0) {key = 'scroll down'}
             else {key = 'scroll up'}
         }
@@ -1307,7 +1312,7 @@ function _input(event) {
 }
 document.addEventListener('keydown', _input)
 document.addEventListener('keyup', _input)
-document.addEventListener('mousewheel', _input); // modern desktop
+document.addEventListener('wheel', _input); // modern desktop
 
 
 // triple click in the lower right to enter fullscreen
