@@ -23,7 +23,7 @@ click = new Audio('assets/audio/lever.ogg')
 <script>
 if(/Android/i.test(navigator.userAgent)) {
   console.log("On android");
-} else if(/webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+} else if(/webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   console.log("Not supported");
 } else {
   console.log("On desktop");
@@ -397,7 +397,9 @@ def MobileControls()
 
 
 if(/Android/i.test(navigator.userAgent)){
-    MobileControls()  
+    MobileControls()
+}else if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+    MobileControls()
 }
 
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
