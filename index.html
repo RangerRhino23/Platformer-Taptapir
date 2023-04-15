@@ -34,7 +34,12 @@ if(/Android/i.test(navigator.userAgent)) {
 
 #Global Functions
 ASSETS_FOLDER = 'assets/'
-set_orientation('landscape')
+if(/Android/i.test(navigator.userAgent)){
+    set_orientation('vertical')
+} else {
+    set_orientation('landscape')
+}
+
 set_background_color('rgb(210,180,140)')
 set_window_color('rgb(23,23,23)')
 set_scale(1.0)
