@@ -366,35 +366,34 @@ mobileMoveLeft=False
 mobileMoveRight=False
 
 def MobileControlsFunc():
-    dist1=distance(mobileMoveButton.xy,mobileMoveButtonLeft.xy)
-    dist2=distance(mobileMoveButton.xy,mobileMoveButtonRight.xy)
-    print(dist2)
-    if mobileMoveButton.y>-0.3:
-        mobileMoveButton.y=-0.3
-    if mobileMoveButton.y<0.3:
+    if mobileMoveButton.y>-0.16:
+        mobileMoveButton.y=-0.16
+        JumpFunc()
+    if mobileMoveButton.y<-0.3:
         mobileMoveButton.y=-0.3
     if mobileMoveButton.x>=mobileMoveButtonLeft.x-0.2:
         mobileMoveButton.x=mobileMoveButtonLeft.x-0.2
-    if dist1<0.25:
+    if mobileMoveButton.x > -0.7:
         player.x+=speed
         collidingLeft=False
         player.texture=textureHolder1.texture
-    if dist2>0.28:
+    if mobileMoveButton.x < -0.78:
         player.x-=speed
         collidingRight=False
         player.texture=textureHolder2.texture
     if not mobileMoveButton.dragging:
         mobileMoveButton.x=-0.7
-
-
+        mobileMoveButton.y=-0.3
+    print(mobileMoveButton.x)
 def MobileControls()
     Entity(update=MobileControlsFunc,alpha=0)
-    jumpButton = Button(scale=.1, texture='textures/jump.png', z=-9, x=.7,y=-.4)
-    jumpButton.on_click = def():
-        JumpFunc()
     mobileMoveButton = Button(draggable=True,x=-0.7,y=-0.3,color=color.white,scale=.1)
     mobileMoveButtonLeft=Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
     mobileMoveButtonRight=Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonUp=Entity(alpha=1,x=-0.39,y=-0.18,scale=.01,parent=camera)
+
+MobileControls()
+
 if(/Android/i.test(navigator.userAgent)){
     MobileControls()
 }
