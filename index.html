@@ -396,6 +396,7 @@ def MobileControls()
     mobileMoveButtonLeft=Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
     mobileMoveButtonRight=Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
 if(/Android/i.test(navigator.userAgent)){
+    set_orientation('vertical')
     MobileControls()
 }
 
