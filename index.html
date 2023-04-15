@@ -22,7 +22,7 @@ click = new Audio('assets/audio/lever.ogg')
   </script>
 <script>
 if(/Android/i.test(navigator.userAgent)) {
-  console.log("On Android");
+  console.log("On android");
 } else if(/webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   console.log("Not supported");
 } else {
@@ -132,7 +132,7 @@ Entity(input=LeverUpdate,x=999999999999999999)
 def test():
     print("Works")
 
-#es = Button(parent=scene,scale=.1, color=color.black, text_color='white', z=-10)
+#es = Button(parent=scene ,scale=.1, color=color.black, text_color='white', z=-10)
 #es.on_click = def():
     #test()
 def update():
@@ -331,8 +331,8 @@ def level2():
 
 
 #Tutorial()
-#level1()
-level2()
+level1()
+#level2()
 # Misc stuff
 intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!', z=-10)
 intro_part_1.on_click = def():
@@ -397,7 +397,7 @@ def MobileControls()
 
 
 if(/Android/i.test(navigator.userAgent)){
-    MobileControls()
+    MobileControls()  
 }
 
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
