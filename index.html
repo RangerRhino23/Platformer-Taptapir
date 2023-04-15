@@ -20,7 +20,15 @@ death = new Audio('assets/audio/wilhelmscream.mp3')
 complete = new Audio('assets/audio/LevelDone.mp3')
 click = new Audio('assets/audio/lever.ogg')
   </script>
-  
+<script>
+if(/Android/i.test(navigator.userAgent)) {
+  console.log("On Android");
+} else if(/webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  console.log("Not supported");
+} else {
+  console.log("On desktop");
+}
+</script>
 <script src="taptapir/taptapir.js"></script>
 <script type="text/sunsnake">
 
@@ -228,13 +236,16 @@ def update():
                 mv.x -= movingBlockSpeed
 
 def input(key):
-    if not editorMode:
-        if key == 'space' and not jumping:
-            ground=player.y
-            velocity = 1.2
-            gravity = 0
-            jumping = True
-                
+    if key == 'space':
+        JumpFunc()
+       
+def JumpFunc():
+    if not editorMode and not jumping:
+        ground=player.y
+        velocity = 1.2
+        gravity = 0
+        jumping = True
+
 player = Entity(texture='textures/player_right.png', scale=0.05)
 
 textureHolder1=Entity(scale=.1,x=999999999999,texture='textures/player_right.png')
@@ -351,5 +362,36 @@ l2.on_click = def():
     collider_objects = []  
     moving_blocks = []
     level3()
+
+
+# Mobile controls section
+mobileMoveLeft=False
+mobileMoveRight=False
+
+def MobileControlsFunc():
+    if mobileMoveLeft==True and canMove and not collidingLeft and not editorMode:
+        player.x -= speed
+        collidingRight=False
+        player.texture=textureHolder2.texture
+    elif mobileMoveRight==True and canMove and not collidingLeft and not editorMode:
+        player.x += speed
+        collidingLeft=False
+        player.texture=textureHolder1.texture    
+
+
+def MobileControls()
+    Entity(update=MobileControlsFunc)
+    jumpButton = Button(scale=.1, texture='textures/jump.png', z=-9, x=.7,y=-.4)
+    jumpButton.on_click = def():
+        JumpFunc()
+    leftButton = Button(scale=.1, texture='textures/walkLeft.png', z=-9, x=-0.8,y=-.35)
+    leftButton.on_click = def():
+        mobileMoveLeft=True
+    rightButton = Button(scale=.1, texture='textures/walkRight.png', z=-9, x=-0.65, y=-.35)
+    rightButton.on_click = def():
+        mobileMoveRight=True
+if(/Android/i.test(navigator.userAgent)){
+    MobileControls()
+}
 
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
