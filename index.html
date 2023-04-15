@@ -198,9 +198,6 @@ def update():
     if velocity > 0:
         player.y += velocity / 60
         velocity -= .1
-    if held_keys['shift'] and canMove and not collidingLeft and not collidingRight and not editorMode:
-        player.x += (held_keys['d'] - held_keys['a']) * speed
-
     #Sets the player at the start
     if startLevel == True:
         player.x = blockOne.x
@@ -369,27 +366,35 @@ mobileMoveLeft=False
 mobileMoveRight=False
 
 def MobileControlsFunc():
-    if mobileMoveLeft==True and canMove and not collidingLeft and not editorMode:
-        player.x -= speed
+    dist1=distance(mobileMoveButton.xy,mobileMoveButtonLeft.xy)
+    dist2=distance(mobileMoveButton.xy,mobileMoveButtonRight.xy)
+    print(dist2)
+    if mobileMoveButton.y>-0.3:
+        mobileMoveButton.y=-0.3
+    if mobileMoveButton.y<0.3:
+        mobileMoveButton.y=-0.3
+    if mobileMoveButton.x>=mobileMoveButtonLeft.x-0.2:
+        mobileMoveButton.x=mobileMoveButtonLeft.x-0.2
+    if dist1<0.25:
+        player.x+=speed
+        collidingLeft=False
+        player.texture=textureHolder1.texture
+    if dist2>0.28:
+        player.x-=speed
         collidingRight=False
         player.texture=textureHolder2.texture
-    elif mobileMoveRight==True and canMove and not collidingLeft and not editorMode:
-        player.x += speed
-        collidingLeft=False
-        player.texture=textureHolder1.texture    
+    if not mobileMoveButton.dragging:
+        mobileMoveButton.x=-0.7
 
 
 def MobileControls()
-    Entity(update=MobileControlsFunc)
+    Entity(update=MobileControlsFunc,alpha=0)
     jumpButton = Button(scale=.1, texture='textures/jump.png', z=-9, x=.7,y=-.4)
     jumpButton.on_click = def():
         JumpFunc()
-    leftButton = Button(scale=.1, texture='textures/walkLeft.png', z=-9, x=-0.8,y=-.35)
-    leftButton.on_click = def():
-        mobileMoveLeft=True
-    rightButton = Button(scale=.1, texture='textures/walkRight.png', z=-9, x=-0.65, y=-.35)
-    rightButton.on_click = def():
-        mobileMoveRight=True
+    mobileMoveButton = Button(draggable=True,x=-0.7,y=-0.3,color=color.white,scale=.1)
+    mobileMoveButtonLeft=Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonRight=Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
 if(/Android/i.test(navigator.userAgent)){
     MobileControls()
 }
