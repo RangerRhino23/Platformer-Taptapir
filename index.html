@@ -398,6 +398,9 @@ def MobileControls()
 
 if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
     MobileControls()
+}else {
+    console.log("This device is not supported.");
+    console.log("Device: " + navigator.userAgent);
 }
 
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
