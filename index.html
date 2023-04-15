@@ -18,7 +18,7 @@ bg_music = new Audio('assets/audio/main music.ogg')
 bg_music.loop = true
 death = new Audio('assets/audio/wilhelmscream.mp3')
 complete = new Audio('assets/audio/LevelDone.mp3')
-
+click = new Audio('assets/audio/lever.ogg')
   </script>
   
 <script src="taptapir/taptapir.js"></script>
@@ -41,6 +41,7 @@ jumping = False
 collider_objects = []
 moving_blocks = []
 laserbeams = []
+levers = []
 gravity = 0
 velocity = 0
 speed = 0.005
@@ -93,6 +94,36 @@ def enabled():
 enabled()
 
 Entity(update=LaserbeamFunc,x=-9999999)
+
+# Lever Class
+def Lever(x=0,y=0.15):
+    lever=Entity(flipped=False,x=x,y=y,texture='textures/lever_on.png',scale=[.035,.08])
+    levers.append(lever)
+    return levers
+
+def LeverUpdate():
+    for lv in levers:
+        dist = distance_2d(player.xy,lv.xy)
+        print(dist)
+        if dist <= 0.045 and key=='e':
+            lv.flipped = not lv.flipped
+            click.pause()
+            click.currentTime = 0
+            click.play()
+        if lv.flipped == True:
+            lv.texture='textures/lever_on.png'
+        else:
+            lv.texture='textures/lever_off.png'
+Entity(input=LeverUpdate,x=999999999999999999)
+CrappyGirkin=Lever(x=-0.1,y=0.23)
+CrappyGirkin2=Lever(x=0.1,y=0.23)
+
+def test():
+    print("Works")
+
+#es = Button(parent=scene,scale=.1, color=color.black, text_color='white', z=-10)
+#es.on_click = def():
+    #test()
 def update():
     speed = 0.005
     ground = groundLevel
@@ -109,7 +140,7 @@ def update():
 
     #Collision Detection
     for e in collider_objects:
-        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5 :
+        if player.x>=e.x-0.05 and player.x<=e.x and player.y >= e.y and player.y<=e.y+.4 :
             collidingRight=True
         if player.x<=e.x+0.05 and player.x>=e.x and player.y == e.y:
             collidingLeft=True
@@ -269,7 +300,7 @@ def level2():
     movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
 
-level1()
+level2()
 # Misc stuff
 intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!', z=-10)
 intro_part_1.on_click = def():
