@@ -155,7 +155,6 @@ def update():
     #Collision Detection
     for e in collider_objects:
         if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5:
-            #Entity(e.y+0.049)
             collidingRight=True
         else:
             after 0.1s:
@@ -405,11 +404,11 @@ def flag3():
 def levelFinished():
     canMove = False
     tutorialPop.play()
-    lf1=Entity(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
+    lf1=Text(text='Congrats! You finished!',parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(lf1)
         tutorialPop.play()
-        lf2=Entity(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
+        lf2=Text(text='Thanks for playing!',parent=camera,y=-.25,x=.3)
         after 2s:
             destroy(lf2)
             currentLevel = 0
@@ -438,25 +437,25 @@ if currentLevel == "4":
 
 def MobileTutorial():
     tutorialPop.play()
-    tut1=Entity(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
+    tut1=Text(text='Hi.',parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(tut1)
         tutorialPop.play()
-        tut2=Entity(text='And welcome to the platformer!',color=color.clear,parent=camera,y=-.25,x=.3)
+        tut2=Text(text='And welcome to the platformer!',parent=camera,y=-.25,x=.3)
         after 2s:
             destroy(tut2)
             tutorialPop.play()
-            tut3=Entity(text='Move the joystick up to jump!',color=color.clear,parent=camera,y=-.25,x=.3)
+            tut3=Text(text='Move the joystick up to jump!',parent=camera,y=-.25,x=.3)
             TutorialJump = False
 
 def MobileTutorial2():
     destroy(tut3)
     tutorialPop.play()
-    tut4=Entity(text='Nicely done!',color=color.clear,parent=camera,y=-.25,x=.3)
+    tut4=Text(text='Nicely done!',parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(tut4)
         tutorialPop.play()
-        tut5=Entity(text='Move around by gliding the joystick left and right.',color=color.clear,parent=camera,y=-.25,x=.3)
+        tut5=Text(text='Move around by gliding the joystick left and right.',parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
         after 3s:
@@ -466,25 +465,25 @@ def MobileTutorial2():
 
 def ComputerTutorial():
     tutorialPop.play()
-    tut1=Entity(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
+    tut1=Text(text='Hi.',parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(tut1)
         tutorialPop.play()
-        tut2=Entity(text='And welcome to the platformer!',color=color.clear,parent=camera,y=-.25,x=.3)
+        tut2=Text(text='And welcome to the platformer!',parent=camera,y=-.25,x=.3)
         after 2s:
             destroy(tut2)
             tutorialPop.play()
-            tut3=Entity(text='Press "spacebar" to jump!',color=color.clear,parent=camera,y=-.25,x=.3)
+            tut3=Text(text='Press "spacebar" to jump!',parent=camera,y=-.25,x=.3)
             TutorialJump = False
 
 def ComputerTutorial2():
     destroy(tut3)
     tutorialPop.play()
-    tut4=Entity(text='Nicely done!',color=color.clear,parent=camera,y=-.25,x=.3)
+    tut4=Text(text='Nicely done!',parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(tut4)
         tutorialPop.play()
-        tut5=Entity(text='Move around with "A" and "D"',color=color.clear,parent=camera,y=-.25,x=.3)
+        tut5=Text(text='Move around with "A" and "D"',parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
         after 3s:
