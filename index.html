@@ -412,8 +412,8 @@ def levelFinished():
         lf2=Entity(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
         after 2s:
             destroy(lf2)
-            curentlevel = 0
-            localStorage.setItem('curentLevel', 0)
+            currentLevel = 0
+            localStorage.setItem('curentLevel', currentLevel)
             location.reload()
 
 # Level loading
