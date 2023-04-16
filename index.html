@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Name</title>
+    <title>The Platformer</title>
     <link rel="shortcut icon" type="image/png" href="assets/icon.png">
   </head>
   <script>
@@ -138,10 +138,13 @@ def update():
     #Hidden Buttons
     if hiddenbuttoncounter == 3:
         hiddenbuttoncounter += 1
+        glitch=Entity(texture='textures/regular sus.gif',parent=camera)
+        bg_music.pause()
         seperateAudio.play()
         canMove = False
         canJump = False
         after 27s:
+            bg_music.play()
             canMove = True
             canJump = True
 
@@ -218,6 +221,8 @@ def update():
     if player.y == 0:
         startLevel = True
         deaths += 1
+        death.pause()
+        death.currentTime = 0
         death.play()
 
     #Moving Platoform Teleportation
