@@ -271,13 +271,14 @@ def Tutorial():
     startLevel = True
     blockOne=Block(x=0.1,y=0.15)
 
-###########
-# Level One
-###########
+#############
+# Level One #
+#############
 
 def level1():
     canMove=True
     startLevel=True
+    hiddenButtonOne = Button(x=-0.3,y=-0.3,scale=.05,parent=camera,color=color.blue)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
     blockThree = Block(x=0.3,y=0.2)
@@ -308,10 +309,25 @@ def flag():
         for mv in moving_blocks:
             destroy(mv)
 
-###########
-# Level Two
-###########
+#############
+# Level Two #
+#############
 def level2():
+    canMove=False
+    blockOne = Block(x=0.1,y=0.15)
+    blockTwo = Block(x=0.23,y=0.26)
+    blockThree = Block(x=.35, y=0.35)
+    laserOne=Laserbeam(x=.16,y=.55)
+    laserTwo=Laserbeam(x=.6,y=.6)
+    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
+    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
+    after 2s:
+        canMove=True
+
+###############
+# Level Three #
+###############
+def level3():
     canMove=False
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.23,y=0.26)
@@ -334,6 +350,8 @@ if currentLevel == "1":
     level1()
 if currentLevel == "2":
     level2()
+if currentLevel == "3":
+    level3()
 
 def MobileTutorial():
     tutorialPop.play()
