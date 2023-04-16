@@ -343,15 +343,18 @@ def flag2():
     dist=distance(player.xy, L2finishFlag.xy)
     print(dist)
     if dist<=0.028:
+        destroy(L2finishFlag)
+        currentLevel = 3
+        localStorage.setItem('curentLevel', currentLevel)
         l2.enabled=True
         bg_music.pause()
         bg_music.currentTime = 0
         complete.play()
-        destroy(finishFlag)
         after 3s:
             bg_music.play()
         for e in collider_objects:
             destroy(e)
+            print(e)
         for mv in moving_blocks:
             destroy(mv)
         for lv in laserbeams:
@@ -362,6 +365,7 @@ def flag2():
 ###############
 def level3():
     canMove=True
+    startLevel=True
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.25,y=.25)
     movingBlockOne = Moving_Block(x=0.3,y=.3,fromX=.3,toX=0.5)
@@ -500,9 +504,9 @@ l2 = Button(scale=3, color=color.black, text_color='white', text=`Level 2 comple
 l2.enabled = False
 l2.on_click = def():
     l2.enabled = False
-    laserbeams = []
     collider_objects = []  
     moving_blocks = []
+    laserbeams = []
     level3()
 
 
