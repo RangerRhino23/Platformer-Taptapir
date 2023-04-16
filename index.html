@@ -376,7 +376,45 @@ def level3():
     blockFive = Block(x=0.8,y=0.5)
     blockSix = Block(x=.95,y=.6)
     blockSeven = Block(x=1,y=.6)
-    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1,y=0.675,update=flag)
+    L3finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1,y=0.675,update=flag3)
+
+def flag2():
+    dist=distance(player.xy, L3finishFlag.xy)
+    print(dist)
+    if dist<=0.028:
+        destroy(L3finishFlag)
+        currentLevel = 4
+        localStorage.setItem('curentLevel', currentLevel)
+        l3.enabled=True
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
+        after 3s:
+            bg_music.play()
+        for e in collider_objects:
+            destroy(e)
+            print(e)
+        for mv in moving_blocks:
+            destroy(mv)
+        for lv in laserbeams:
+            destroy(lv)
+
+##################
+# Level Finished #
+##################
+def levelFinished():
+    canMove = False
+    tutorialPop.play()
+    lf1=Entity(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(lf1)
+        tutorialPop.play()
+        lf2=Entity(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
+        after 2s:
+            destroy(lf2)
+            curentlevel = 0
+            localStorage.setItem('curentLevel', 0)
+            location.reload()
 
 # Level loading
 ##
@@ -395,6 +433,8 @@ if currentLevel == "2":
     level2()
 if currentLevel == "3":
     level3()
+if currentLevel == "4":
+    levelFinished()
 
 def MobileTutorial():
     tutorialPop.play()
