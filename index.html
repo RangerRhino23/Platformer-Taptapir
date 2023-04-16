@@ -51,6 +51,7 @@ def EditorCamera():
 #Variables
 jumping = False
 canMove=False
+hiddenbuttoncounter = 0
 collider_objects = []
 moving_blocks = []
 laserbeams = []
@@ -132,6 +133,11 @@ Entity(input=LeverUpdate,x=999999999999999999)
 
 
 def update():
+
+    #Hidden Buttons
+    if hiddenbuttoncounter == 3:
+        print('test')
+
     speed = 0.005
     ground = groundLevel
 
@@ -278,7 +284,10 @@ def Tutorial():
 def level1():
     canMove=True
     startLevel=True
-    hiddenButtonOne = Button(x=-0.3,y=-0.3,scale=.05,parent=camera,color=color.blue)
+    hiddenButtonOne = Button(x=0,y=0.15,scale=.05,color=color.blue, parent=scene)
+    hiddenButtonOne.on_click = def():
+        hiddenbuttoncounter += 1
+        destroy(hiddenButtonOne)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
     blockThree = Block(x=0.3,y=0.2)
@@ -334,14 +343,17 @@ def level3():
     blockThree = Block(x=.35, y=0.35)
     laserOne=Laserbeam(x=.16,y=.55)
     laserTwo=Laserbeam(x=.6,y=.6)
-    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
+    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=0.55)
+    blockFour = Block(x=.6,y=.35)
+    laserThree=Laserbeam(x=.65,y=.6)
+    blockFive = Block(x=.7,y=.35)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
     after 2s:
         canMove=True
 
 # Level loading
 if currentLevel != "0" or currentLevel != "1" or currentLevel != "2"
-    currentLevel = "0"
+    currentLevel = "2"
     localStorage.setItem('curentLevel', '0')
 
 if currentLevel == "0":
