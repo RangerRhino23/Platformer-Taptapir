@@ -315,7 +315,10 @@ class Entity {
 
     get parent() {return this._parent}
     set parent(value) {
-        if (value === scene || value === null) {
+        if (value == null) {
+            value = scene
+        }
+        if (value === scene) {
             value.appendChild(this.el)
         }
         else {
@@ -1213,8 +1216,8 @@ function sample(population, k){
 }
 
 function destroy(_entity) {
-    if (_entity._parent) {
-        _entity.parent.children.remove(_entity)
+    if (_entity._parent && _entity._parent._children) {
+        _entity._parent._children.remove(_entity)
     }
     _entity.el.remove()
     delete _entity
