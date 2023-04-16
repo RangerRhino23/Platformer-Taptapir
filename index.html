@@ -342,8 +342,18 @@ def level2():
 # Level Three #
 ###############
 def level3():
-    canMove=False
+    canMove=True
     blockOne = Block(x=0.1,y=0.15)
+    blockTwo = Block(x=0.25,y=.25)
+    movingBlockOne = Moving_Block(x=0.3,y=.3,fromX=.3,toX=0.5)
+    blockThree = Block(x=.6,y=.4)
+    laserOne = Laserbeam(x=.65,y=.65)
+    blockFour = Block(x=.7,y=.5)
+    laserTwo = Laserbeam(x=.75,y=.75)
+    blockFive = Block(x=0.8,y=0.5)
+    blockSix = Block(x=.95,y=.6)
+    blockSeven = Block(x=1,y=.6)
+    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1,y=0.675,update=flag)
 
 # Level loading
 if currentLevel != "0" or currentLevel != "1" or currentLevel != "2" or currentLevel != "3"
