@@ -327,9 +327,14 @@ def level2():
     blockTwo = Block(x=0.23,y=0.26)
     blockThree = Block(x=.35, y=0.35)
     laserOne=Laserbeam(x=.16,y=.55)
-    laserTwo=Laserbeam(x=.6,y=.6)
-    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
-    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
+    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=0.7)
+    blockFour = Block(x=.75,y=.35)
+    laserTwo=Laserbeam(x=.8,y=.6)
+    blockFive = Block(x=.85,y=.35)
+    blockSix = Block(x=1,y=.4)
+    movingBlockTwo = Moving_Block(x=1.05,y=.45,fromX=1.05,toX=1.3)
+    blockSeven = Block(x=1.35,y=.45)
+    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.35,y=0.525,update=flag)
     after 2s:
         canMove=True
 
@@ -339,21 +344,10 @@ def level2():
 def level3():
     canMove=False
     blockOne = Block(x=0.1,y=0.15)
-    blockTwo = Block(x=0.23,y=0.26)
-    blockThree = Block(x=.35, y=0.35)
-    laserOne=Laserbeam(x=.16,y=.55)
-    laserTwo=Laserbeam(x=.6,y=.6)
-    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=0.55)
-    blockFour = Block(x=.6,y=.35)
-    laserThree=Laserbeam(x=.65,y=.6)
-    blockFive = Block(x=.7,y=.35)
-    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
-    after 2s:
-        canMove=True
 
 # Level loading
 if currentLevel != "0" or currentLevel != "1" or currentLevel != "2" or currentLevel != "3"
-    currentLevel = "1"
+    currentLevel = "0"
     localStorage.setItem('curentLevel', '0')
 
 if currentLevel == "0":
