@@ -119,7 +119,6 @@ def Lever(x=0,y=0.15):
 def LeverUpdate():
     for lv in levers:
         dist = distance_2d(player.xy,lv.xy)
-        print(dist)
         if dist <= 0.045 and key=='e':
             lv.flipped = not lv.flipped
             click.pause()
@@ -130,14 +129,8 @@ def LeverUpdate():
         else:
             lv.texture='textures/lever_off.png'
 Entity(input=LeverUpdate,x=999999999999999999)
-#CrappyGirkin=Lever(x=-0.1,y=0.23)
-#CrappyGirkin2=Lever(x=0.1,y=0.23)
-def test():
-    print("Works")
 
-#es = Button(parent=scene ,scale=.1, color=color.black, text_color='white', z=-10)
-#es.on_click = def():
-    #test()
+
 def update():
     speed = 0.005
     ground = groundLevel
@@ -154,8 +147,6 @@ def update():
 
     #Collision Detection
     for e in collider_objects:
-        #Entity(x=e.x,y=e.y+0.000005,scale=0.05)
-        #Entity(x=e.x+0,y=e.y-.01,scale=0.05)
         if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5:
             #Entity(e.y+0.049)
             collidingRight=True
@@ -286,6 +277,7 @@ def Tutorial():
 
 def level1():
     canMove=True
+    startLevel=True
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
     blockThree = Block(x=0.3,y=0.2)
@@ -328,7 +320,6 @@ def level2():
     laserTwo=Laserbeam(x=.6,y=.6)
     movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
-    print("Intro to lasers here.")
     after 2s:
         canMove=True
 
@@ -367,11 +358,10 @@ def MobileTutorial2():
         tut5=Entity(text='Move around by gliding the joystick left and right.',color=color.clear,parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
-        after 5s:
+        after 3s:
             blockFour = Block(x=.19,y=0.15)
             blockFive = Block(x=0.24,y=0.15)
-            finishFlag=Entity(x=0,y=0)
-
+            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
 
 def ComputerTutorial():
     tutorialPop.play()
@@ -396,14 +386,35 @@ def ComputerTutorial2():
         tut5=Entity(text='Move around with "A" and "D"',color=color.clear,parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
-        after 5s:
+        after 3s:
             blockFour = Block(x=.19,y=0.15)
             blockFive = Block(x=0.24,y=0.15)
-            finishFlag=Entity(x=0,y=0)
+            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
+
+eVar=False
+def TutorialFlagStuff():
+    localStorage.setItem('curentLevel', '1')
+    dist=distance(player.xy,TfinishFlag.xy)
+    if dist<=0.022 and not eVar:
+        eVar=True
+        destroy(tut5)
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
+        after 3s:
+            bg_music.play()        
+        TutorialComplete = Button(scale=3, color=color.black, text_color='white', text="Tutorial Completed!", z=-9)
+        for e in collider_objects:
+            destroy(e)
+        TutorialComplete.on_click = def():
+            collider_objects = []
+            level1()
+            destroy(TfinishFlag)
+            destroy(TutorialComplete)
 
 # Misc stuff    
 if currentLevel == "0":
-    intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!', z=-10)
+    intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!\n\n click to continue', z=-10)
     intro_part_1.on_click = def():
         intro_part_1.enabled = False
 
@@ -419,7 +430,7 @@ if currentLevel == "0":
             ComputerTutorial()
         }
 
-l1 = Button(scale=3, color=color.black, text_color='white', text=`Level 1 complete!`, z=-9)
+l1 = Button(scale=3, color=color.black, text_color='white', text="Level 1 complete!", z=-9)
 l1.enabled = False
 l1.on_click = def():
     l1.enabled = False
@@ -459,7 +470,6 @@ def MobileControlsFunc():
     if not mobileMoveButton.dragging:
         mobileMoveButton.x=-0.7
         mobileMoveButton.y=-0.3
-    print(mobileMoveButton.x)
 def MobileControls()
     Entity(update=MobileControlsFunc,alpha=0)
     mobileMoveButton = Button(draggable=True,x=-0.7,y=-0.3,color=color.white,scale=.2)
@@ -471,7 +481,7 @@ def MobileControls()
 if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
     MobileControls()
 }else {
-    console.log("This device is not supported.");
+    print("This device is not supported for mobile controls.");
     console.log("Device: " + navigator.userAgent);
 }
 
