@@ -16,17 +16,30 @@
 // Audio
 bg_music = new Audio('assets/audio/main music.ogg')
 bg_music.loop = true
-death = new Audio('assets/audio/wilhelmscream.mp3')
+death = new Audio('assets/audio/death.mp3')
 complete = new Audio('assets/audio/LevelDone.mp3')
-
+click = new Audio('assets/audio/lever.ogg')
+tutorialPop = new Audio('assets/audio/pop.ogg')
+seperateAudio = new Audio('assets/audio/seperateAudio.mp3')
   </script>
-  
+<script>
+if(/Android/i.test(navigator.userAgent)) {
+  console.log("On android");
+} else if(/webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  console.log("Not supported");
+} else {
+  console.log("On desktop");
+}
+</script>
 <script src="taptapir/taptapir.js"></script>
 <script type="text/sunsnake">
 
 #Global Functions
 ASSETS_FOLDER = 'assets/'
+
 set_orientation('landscape')
+
+
 set_background_color('rgb(210,180,140)')
 set_window_color('rgb(23,23,23)')
 set_scale(1.0)
@@ -38,9 +51,13 @@ def EditorCamera():
 
 #Variables
 jumping = False
+canMove=False
+canJump=True
+hiddenbuttoncounter = 0
 collider_objects = []
 moving_blocks = []
 laserbeams = []
+levers = []
 gravity = 0
 velocity = 0
 speed = 0.005
@@ -53,6 +70,7 @@ editorMode = False
 FinishedLevelOne = False
 FinishedLevelTwo = False
 FinishedLevelThree = False
+TutorialJump = True
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
@@ -93,7 +111,40 @@ def enabled():
 enabled()
 
 Entity(update=LaserbeamFunc,x=-9999999)
+
+# Lever Class
+def Lever(x=0,y=0.15):
+    lever=Entity(flipped=False,x=x,y=y,texture='textures/lever_on.png',scale=[.035,.06])
+    levers.append(lever)
+    return levers
+
+def LeverUpdate():
+    for lv in levers:
+        dist = distance_2d(player.xy,lv.xy)
+        if dist <= 0.045 and key=='e':
+            lv.flipped = not lv.flipped
+            click.pause()
+            click.currentTime = 0
+            click.play()
+        if lv.flipped == True:
+            lv.texture='textures/lever_on.png'
+        else:
+            lv.texture='textures/lever_off.png'
+Entity(input=LeverUpdate,x=999999999999999999)
+
+
 def update():
+
+    #Hidden Buttons
+    if hiddenbuttoncounter == 3:
+        hiddenbuttoncounter += 1
+        seperateAudio.play()
+        canMove = False
+        canJump = False
+        after 27s:
+            canMove = True
+            canJump = True
+
     speed = 0.005
     ground = groundLevel
 
@@ -109,8 +160,12 @@ def update():
 
     #Collision Detection
     for e in collider_objects:
-        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5 :
+        if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5:
+            #Entity(e.y+0.049)
             collidingRight=True
+        else:
+            after 0.1s:
+                collidingRight=False
         if player.x<=e.x+0.05 and player.x>=e.x and player.y == e.y:
             collidingLeft=True
         if e.x > 0:
@@ -121,9 +176,8 @@ def update():
                 ground = max(ground, e.ypos)
         else:
             ground = max(ground, 0)
-        if player.y>=e.y+.01:
+        if held_keys['a']:
             collidingRight=False
-            collidingLeft=False
     
     #Player Movement
     if editorMode:
@@ -135,11 +189,11 @@ def update():
             camera.y -= speed
         if held_keys['d']:
             camera.x += speed
-    if held_keys['d'] and not collidingRight and not editorMode:
+    if held_keys['d'] and canMove and not collidingRight and not editorMode:
         player.x += speed
         collidingLeft=False
         player.texture=textureHolder1.texture
-    if held_keys['a'] and not collidingLeft and not editorMode:
+    if held_keys['a'] and canMove and not collidingLeft and not editorMode:
         player.x -= speed
         collidingRight=False
         player.texture=textureHolder2.texture
@@ -154,9 +208,6 @@ def update():
     if velocity > 0:
         player.y += velocity / 60
         velocity -= .1
-    if held_keys['shift'] and not collidingLeft and not collidingRight and not editorMode:
-        player.x += (held_keys['d'] - held_keys['a']) * speed
-
     #Sets the player at the start
     if startLevel == True:
         player.x = blockOne.x
@@ -192,13 +243,24 @@ def update():
                 mv.x -= movingBlockSpeed
 
 def input(key):
-    if not editorMode:
-        if key == 'space' and not jumping:
-            ground=player.y
-            velocity = 1.2
-            gravity = 0
-            jumping = True
-                
+    if key == 'space':
+        JumpFunc()
+       
+def JumpFunc():
+    if not editorMode and not jumping and canJump:
+        ground=player.y
+        velocity = 1.2
+        gravity = 0
+        jumping = True
+        if not TutorialJump:
+            TutorialJump=True
+            if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+                MobileTutorial2()
+            }else
+            {
+                ComputerTutorial2()
+            }
+
 player = Entity(texture='textures/player_right.png', scale=0.05)
 
 textureHolder1=Entity(scale=.1,x=999999999999,texture='textures/player_right.png')
@@ -209,17 +271,32 @@ sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
 deaths = 0
 deaths_text = Text(parent=camera,text_origin=[0,0], scale=0.75, y=0.4, text_size=5, text_color=color.white)
 
-startLevel = True
-
 ###################
 ###BUILDING ZONE###
 ###################
 
-###########
-# Level One
-###########
+##########
+# Tutorial
+##########
+
+def Tutorial():
+    canMove = True
+    startLevel = True
+    blockOne=Block(x=0.1,y=0.15)
+
+#############
+# Level One #
+#############
 
 def level1():
+    canMove=True
+    startLevel=True
+    after 20s:
+        hiddenButtonOne = Button(x=0,y=0.25,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonOne.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonOne)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
     blockThree = Block(x=0.3,y=0.2)
@@ -238,7 +315,53 @@ def flag():
     if dist<=0.03 and FinishedLevelOne == False:
         l1.enabled = True
         FinishedLevelOne = True
-        startLevel = True
+        currentLevel = 2
+        localStorage.setItem('curentLevel', currentLevel)
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
+        destroy(finishFlag)
+        after 3s:
+            bg_music.play()
+        for e in collider_objects:
+            destroy(e)
+        for mv in moving_blocks:
+            destroy(mv)
+        destroy(hiddenButtonOne)
+
+#############
+# Level Two #
+#############
+def level2():
+    canMove=True
+    startLevel=True
+    after 20s:
+        hiddenButtonTwo = Button(x=.55,y=0.6,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonTwo.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonTwo)
+    blockOne = Block(x=0.1,y=0.15)
+    blockTwo = Block(x=0.23,y=0.26)
+    blockThree = Block(x=.35, y=0.35)
+    laserOne=Laserbeam(x=.16,y=.55)
+    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=0.7)
+    blockFour = Block(x=.75,y=.35)
+    laserTwo=Laserbeam(x=.8,y=.6)
+    blockFive = Block(x=.85,y=.35)
+    blockSix = Block(x=1,y=.4)
+    movingBlockTwo = Moving_Block(x=1.05,y=.45,fromX=1.05,toX=1.3)
+    blockSeven = Block(x=1.35,y=.45)
+    L2finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.35,y=0.525,update=flag2)
+
+def flag2():
+    dist=distance(player.xy, L2finishFlag.xy)
+    #print(dist)
+    if dist<=0.028:
+        destroy(L2finishFlag)
+        currentLevel = 3
+        localStorage.setItem('curentLevel', currentLevel)
+        l2.enabled=True
         bg_music.pause()
         bg_music.currentTime = 0
         complete.play()
@@ -246,43 +369,198 @@ def flag():
             bg_music.play()
         for e in collider_objects:
             destroy(e)
+            #print(e)
         for mv in moving_blocks:
             destroy(mv)
-    elif dist<=0.03 and FinishedLevelOne == True and FinishedLevelTwo == False:
-        l2.enabled = True
-        FinishedLevelTwo = True
-        startLevel = True
+        for lv in laserbeams:
+            destroy(lv)
+
+###############
+# Level Three #
+###############
+def level3():
+    canMove=True
+    startLevel=True
+    after 20s:
+        hiddenButtonThree = Button(x=.75,y=0.8,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonThree.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonThree)
+    blockOne = Block(x=0.1,y=0.15)
+    blockTwo = Block(x=0.25,y=.25)
+    movingBlockOne = Moving_Block(x=0.3,y=.3,fromX=.3,toX=0.5)
+    blockThree = Block(x=.6,y=.4)
+    laserOne = Laserbeam(x=.65,y=.65)
+    blockFour = Block(x=.7,y=.5)
+    laserTwo = Laserbeam(x=.75,y=.75)
+    blockFive = Block(x=0.8,y=0.5)
+    blockSix = Block(x=.95,y=.6)
+    blockSeven = Block(x=1,y=.6)
+    L3finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1,y=0.675,update=flag3)
+
+def flag3():
+    dist=distance(player.xy, L3finishFlag.xy)
+    #print(dist)
+    if dist<=0.028:
+        destroy(L3finishFlag)
+        currentLevel = 4
+        localStorage.setItem('curentLevel', currentLevel)
+        l3.enabled=True
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
+        after 3s:
+            bg_music.play()
         for e in collider_objects:
             destroy(e)
+            #print(e)
         for mv in moving_blocks:
             destroy(mv)
+        for lv in laserbeams:
+            destroy(lv)
 
-###########
-# Level Two
-###########
-def level2():
+##################
+# Level Finished #
+##################
+def levelFinished():
+    canMove=True
+    startLevel=True
     blockOne = Block(x=0.1,y=0.15)
-    blockTwo = Block(x=0.23,y=0.26)
-    blockThree = Block(x=.35, y=0.35)
-    laserOne=Laserbeam(x=.16,y=.55)
-    laserTwo=Laserbeam(x=.6,y=.6)
-    movingBlockOne = Moving_Block(x=0.4,y=0.35,fromX=0.4,toX=1)
-    finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.75,y=0.425,update=flag)
+    blockTwo = Block(x=0.15,y=0.15)
+    blockThree = Block(x=0.2,y=.15)
+    blockFour = Block(x=0.25,y=.15)
+    movingPlatformOne = Moving_Block(x=0.3,y=.15,fromX=.3,toX=.9)
+    blockThree = Block(x=.9,y=.2)
+    tutorialPop.play()
+    lf1=Text(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(lf1)
+        tutorialPop.play()
+        lf2=Text(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
+        after 10s:
+            destroy(lf2)
+            currentLevel = 0
+            localStorage.setItem('curentLevel', currentLevel)
+            location.reload()
 
-level2()
-# Misc stuff
-intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!', z=-10)
-intro_part_1.on_click = def():
-    intro_part_1.enabled = False
+# Level loading
+##
+currentLevel = localStorage.getItem('curentLevel')
+if currentLevel == null:
+    currentLevel = 0
+    localStorage.setItem('curentLevel', currentLevel)
+    location.reload()
 
 
+if currentLevel == "0":
+    Tutorial()
+if currentLevel == "1":
+    level1()
+if currentLevel == "2":
+    level2()
+if currentLevel == "3":
+    level3()
+if currentLevel == "4":
+    levelFinished()
 
-intro_part_2 = Button(texture='textures/the lads.png',scale=2, color=color.black, text_color='white', text='A game made by RangerRhino23 and Itsbailey X3525.', z=-9)
-intro_part_2.on_click = def():
-    intro_part_2.enabled = False
-    bg_music.play()
+def MobileTutorial():
+    tutorialPop.play()
+    tut1=Text(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut1)
+        tutorialPop.play()
+        tut2=Text(text='And welcome to the platformer!',color=color.clear,parent=camera,y=-.25,x=.3)
+        after 2s:
+            destroy(tut2)
+            tutorialPop.play()
+            tut3=Text(text='Move the joystick up to jump!',color=color.clear,parent=camera,y=-.25,x=.3)
+            TutorialJump = False
 
-l1 = Button(scale=3, color=color.black, text_color='white', text=`Level 1 complete!`, z=-9)
+def MobileTutorial2():
+    destroy(tut3)
+    tutorialPop.play()
+    tut4=Text(text='Nicely done!',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut4)
+        tutorialPop.play()
+        tut5=Text(text='Move around by gliding the joystick left and right.',color=color.clear,parent=camera,y=-.25,x=.3)
+        blockTwo = Block(x=0.145,y=0.15)
+        blockThree = Block(x=0.07,y=0.15)
+        after 3s:
+            blockFour = Block(x=.19,y=0.15)
+            blockFive = Block(x=0.24,y=0.15)
+            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
+
+def ComputerTutorial():
+    tutorialPop.play()
+    tut1=Text(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut1)
+        tutorialPop.play()
+        tut2=Text(text='And welcome to the platformer!',color=color.clear,parent=camera,y=-.25,x=.3)
+        after 2s:
+            destroy(tut2)
+            tutorialPop.play()
+            tut3=Text(text='Press "spacebar" to jump!',color=color.clear,parent=camera,y=-.25,x=.3)
+            TutorialJump = False
+
+def ComputerTutorial2():
+    destroy(tut3)
+    tutorialPop.play()
+    tut4=Text(text='Nicely done!',color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut4)
+        tutorialPop.play()
+        tut5=Text(text='Move around with "A" and "D"',color=color.clear,parent=camera,y=-.25,x=.3)
+        blockTwo = Block(x=0.145,y=0.15)
+        blockThree = Block(x=0.07,y=0.15)
+        after 3s:
+            blockFour = Block(x=.19,y=0.15)
+            blockFive = Block(x=0.24,y=0.15)
+            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
+
+eVar=False
+def TutorialFlagStuff():
+    currentLevel = 1
+    localStorage.setItem('curentLevel', currentLevel)
+    dist=distance(player.xy,TfinishFlag.xy)
+    if dist<=0.022 and not eVar:
+        eVar=True
+        destroy(tut5)
+        bg_music.pause()
+        bg_music.currentTime = 0
+        complete.play()
+        after 3s:
+            bg_music.play()        
+        TutorialComplete = Button(scale=3, color=color.black, text_color='white', text="Tutorial Completed!", z=-9)
+        for e in collider_objects:
+            destroy(e)
+        TutorialComplete.on_click = def():
+            collider_objects = []
+            level1()
+            destroy(TfinishFlag)
+            destroy(TutorialComplete)
+
+# Misc stuff    
+if currentLevel == "0":
+    intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!\n\n click to continue', z=-10)
+    intro_part_1.on_click = def():
+        intro_part_1.enabled = False
+
+    # Major nesting going down here
+    intro_part_2 = Button(texture='textures/the lads.png',scale=2, color=color.black, text_color='white', text='A game made by RangerRhino23 and Itsbailey X3525.', z=-9)
+    intro_part_2.on_click = def():
+        intro_part_2.enabled = False
+        bg_music.play()
+        if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+            MobileTutorial()
+        }else
+        {
+            ComputerTutorial()
+        }
+
+l1 = Button(scale=3, color=color.black, text_color='white', text="Level 1 complete!", z=-9)
 l1.enabled = False
 l1.on_click = def():
     l1.enabled = False
@@ -296,6 +574,54 @@ l2.on_click = def():
     l2.enabled = False
     collider_objects = []  
     moving_blocks = []
+    laserbeams = []
     level3()
+
+l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!", z=-9)
+l3.enabled = False
+l3.on_click = def():
+    l3.enabled = False
+    collider_objects = []  
+    moving_blocks = []
+    levelFinished()
+
+
+# Mobile controls section
+mobileMoveLeft=False
+mobileMoveRight=False
+
+def MobileControlsFunc():
+    if mobileMoveButton.y>-0.16:
+        mobileMoveButton.y=-0.16
+        JumpFunc()
+    if mobileMoveButton.y<-0.3:
+        mobileMoveButton.y=-0.3
+    if mobileMoveButton.x>=mobileMoveButtonLeft.x-0.2:
+        mobileMoveButton.x=mobileMoveButtonLeft.x-0.2
+    if mobileMoveButton.x > -0.7:
+        player.x+=speed
+        collidingLeft=False
+        player.texture=textureHolder1.texture
+    if mobileMoveButton.x < -0.78:
+        player.x-=speed
+        collidingRight=False
+        player.texture=textureHolder2.texture
+    if not mobileMoveButton.dragging:
+        mobileMoveButton.x=-0.7
+        mobileMoveButton.y=-0.3
+def MobileControls()
+    Entity(update=MobileControlsFunc,alpha=0)
+    mobileMoveButton = Button(draggable=True,x=-0.7,y=-0.3,color=color.white,scale=.2)
+    mobileMoveButtonLeft=Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonRight=Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonUp=Entity(alpha=0,x=-0.39,y=-0.18,scale=.01,parent=camera)
+
+
+if(/Android/i.test(navigator.userAgent)){
+    MobileControls()
+}else {
+    print("This device is not supported for mobile controls.");
+    console.log("Device: " + navigator.userAgent);
+}
 
     </script><script src="taptapir/sunsnake_compiler.js"></script></html>
