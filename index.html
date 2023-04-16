@@ -20,6 +20,7 @@ death = new Audio('assets/audio/wilhelmscream.mp3')
 complete = new Audio('assets/audio/LevelDone.mp3')
 click = new Audio('assets/audio/lever.ogg')
 tutorialPop = new Audio('assets/audio/pop.ogg')
+seperateAudio = new Audio('assets/audio/seperateAudio.mp3')
   </script>
 <script>
 if(/Android/i.test(navigator.userAgent)) {
@@ -135,7 +136,8 @@ def update():
 
     #Hidden Buttons
     if hiddenbuttoncounter == 3:
-        print('test')
+        seperateAudio.play()
+        hiddenbuttoncounter += 1
 
     speed = 0.005
     ground = groundLevel
