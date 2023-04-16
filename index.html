@@ -505,7 +505,7 @@ def MobileControls()
     mobileMoveButtonUp=Entity(alpha=0,x=-0.39,y=-0.18,scale=.01,parent=camera)
 
 
-if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+if(/Android/i.test(navigator.userAgent)){
     MobileControls()
 }else {
     print("This device is not supported for mobile controls.");
