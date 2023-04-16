@@ -341,11 +341,13 @@ def flag2():
     dist=distance(player.xy, L2finishFlag.xy)
     print(dist)
     if dist<=0.028:
+        destroy(L2finishFlag)
+        currentLevel = 3
+        localStorage.setItem('curentLevel', currentLevel)
         l2.enabled=True
         bg_music.pause()
         bg_music.currentTime = 0
         complete.play()
-        destroy(L2finishFlag)
         after 3s:
             bg_music.play()
         for e in collider_objects:
