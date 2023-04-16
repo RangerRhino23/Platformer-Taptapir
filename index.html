@@ -321,7 +321,7 @@ def flag():
 # Level Two #
 #############
 def level2():
-    canMove=False
+    canMove=True
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.23,y=0.26)
     blockThree = Block(x=.35, y=0.35)
@@ -334,8 +334,8 @@ def level2():
     movingBlockTwo = Moving_Block(x=1.05,y=.45,fromX=1.05,toX=1.3)
     blockSeven = Block(x=1.35,y=.45)
     finishFlag = Entity(scale=[0.05,0.1],texture='textures/finish.png',x=1.35,y=0.525,update=flag)
-    after 2s:
-        canMove=True
+
+
 
 ###############
 # Level Three #
@@ -419,7 +419,8 @@ def ComputerTutorial2():
 
 eVar=False
 def TutorialFlagStuff():
-    localStorage.setItem('curentLevel', '1')
+    currentLevel = 1
+    localStorage.setItem('curentLevel', currentLevel)
     dist=distance(player.xy,TfinishFlag.xy)
     if dist<=0.022 and not eVar:
         eVar=True
@@ -504,7 +505,7 @@ def MobileControls()
     mobileMoveButtonUp=Entity(alpha=0,x=-0.39,y=-0.18,scale=.01,parent=camera)
 
 
-if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
     MobileControls()
 }else {
     print("This device is not supported for mobile controls.");
