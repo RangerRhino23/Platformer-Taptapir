@@ -549,6 +549,14 @@ l2.on_click = def():
     laserbeams = []
     level3()
 
+l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!", z=-9)
+l3.enabled = False
+l3.on_click = def():
+    l3.enabled = False
+    collider_objects = []  
+    moving_blocks = []
+    levelFinished()
+
 
 # Mobile controls section
 mobileMoveLeft=False
