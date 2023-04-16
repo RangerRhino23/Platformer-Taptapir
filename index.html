@@ -52,6 +52,7 @@ def EditorCamera():
 #Variables
 jumping = False
 canMove=False
+canJump=True
 hiddenbuttoncounter = 0
 collider_objects = []
 moving_blocks = []
@@ -136,8 +137,13 @@ def update():
 
     #Hidden Buttons
     if hiddenbuttoncounter == 3:
-        seperateAudio.play()
         hiddenbuttoncounter += 1
+        seperateAudio.play()
+        canMove = False
+        canJump = False
+        after 27s:
+            canMove = True
+            canJump = True
 
     speed = 0.005
     ground = groundLevel
@@ -241,7 +247,7 @@ def input(key):
         JumpFunc()
        
 def JumpFunc():
-    if not editorMode and not jumping:
+    if not editorMode and not jumping and canJump:
         ground=player.y
         velocity = 1.2
         gravity = 0
@@ -285,10 +291,12 @@ def Tutorial():
 def level1():
     canMove=True
     startLevel=True
-    hiddenButtonOne = Button(x=0,y=0.15,scale=.05,color=color.blue, parent=scene)
-    hiddenButtonOne.on_click = def():
-        hiddenbuttoncounter += 1
-        destroy(hiddenButtonOne)
+    after 20s:
+        hiddenButtonOne = Button(x=0,y=0.25,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonOne.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonOne)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.2,y=0.2)
     blockThree = Block(x=0.3,y=0.2)
@@ -319,6 +327,7 @@ def flag():
             destroy(e)
         for mv in moving_blocks:
             destroy(mv)
+        destroy(hiddenButtonOne)
 
 #############
 # Level Two #
@@ -326,6 +335,12 @@ def flag():
 def level2():
     canMove=True
     startLevel=True
+    after 20s:
+        hiddenButtonTwo = Button(x=.55,y=0.6,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonTwo.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonTwo)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.23,y=0.26)
     blockThree = Block(x=.35, y=0.35)
@@ -341,7 +356,7 @@ def level2():
 
 def flag2():
     dist=distance(player.xy, L2finishFlag.xy)
-    print(dist)
+    #print(dist)
     if dist<=0.028:
         destroy(L2finishFlag)
         currentLevel = 3
@@ -354,7 +369,7 @@ def flag2():
             bg_music.play()
         for e in collider_objects:
             destroy(e)
-            print(e)
+            #print(e)
         for mv in moving_blocks:
             destroy(mv)
         for lv in laserbeams:
@@ -366,6 +381,12 @@ def flag2():
 def level3():
     canMove=True
     startLevel=True
+    after 20s:
+        hiddenButtonThree = Button(x=.75,y=0.8,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        hiddenButtonThree.on_click = def():
+            tutorialPop.play()
+            hiddenbuttoncounter += 1
+            destroy(hiddenButtonThree)
     blockOne = Block(x=0.1,y=0.15)
     blockTwo = Block(x=0.25,y=.25)
     movingBlockOne = Moving_Block(x=0.3,y=.3,fromX=.3,toX=0.5)
@@ -380,7 +401,7 @@ def level3():
 
 def flag3():
     dist=distance(player.xy, L3finishFlag.xy)
-    print(dist)
+    #print(dist)
     if dist<=0.028:
         destroy(L3finishFlag)
         currentLevel = 4
@@ -393,7 +414,7 @@ def flag3():
             bg_music.play()
         for e in collider_objects:
             destroy(e)
-            print(e)
+            #print(e)
         for mv in moving_blocks:
             destroy(mv)
         for lv in laserbeams:
@@ -403,14 +424,21 @@ def flag3():
 # Level Finished #
 ##################
 def levelFinished():
-    canMove = False
+    canMove=True
+    startLevel=True
+    blockOne = Block(x=0.1,y=0.15)
+    blockTwo = Block(x=0.15,y=0.15)
+    blockThree = Block(x=0.2,y=.15)
+    blockFour = Block(x=0.25,y=.15)
+    movingPlatformOne = Moving_Block(x=0.3,y=.15,fromX=.3,toX=.9)
+    blockThree = Block(x=.9,y=.2)
     tutorialPop.play()
     lf1=Text(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
     after 2s:
         destroy(lf1)
         tutorialPop.play()
         lf2=Text(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
-        after 2s:
+        after 10s:
             destroy(lf2)
             currentLevel = 0
             localStorage.setItem('curentLevel', currentLevel)
