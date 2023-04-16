@@ -69,7 +69,6 @@ FinishedLevelOne = False
 FinishedLevelTwo = False
 FinishedLevelThree = False
 TutorialJump = True
-currentLevel = localStorage.getItem('curentLevel');
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
@@ -346,9 +345,12 @@ def level3():
     blockOne = Block(x=0.1,y=0.15)
 
 # Level loading
-if currentLevel != "0" or currentLevel != "1" or currentLevel != "2" or currentLevel != "3"
-    currentLevel = "0"
-    localStorage.setItem('curentLevel', '0')
+currentLevel = localStorage.getItem('curentLevel')
+if currentLevel == null:
+    currentLevel = 0
+    localStorage.setItem('curentLevel', currentLevel)
+    location.reload()
+
 
 if currentLevel == "0":
     Tutorial()
