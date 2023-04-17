@@ -95,8 +95,7 @@ def Laserbeam(x=0,y=0):
 def LaserbeamFunc():
     for la in laserbeams:
         if player.x<=la.x+0.025 and player.x>=la.x-0.025 and player.y<=la.y+.12 and player.y>=la.y-0.12 and la.alpha==1:
-            startLevel = True
-            deaths+=1
+            deathFunc()
 def disabled():
     for la in laserbeams:
         la.alpha=0
@@ -219,11 +218,7 @@ def update():
 
     #Death
     if player.y == 0:
-        startLevel = True
-        deaths += 1
-        death.pause()
-        death.currentTime = 0
-        death.play()
+        deathFunc()
 
     #Moving Platoform Teleportation
     for mv in moving_blocks:
@@ -246,6 +241,13 @@ def update():
         if not mv.movingRight:
             if mv.x>=mv.fromX:
                 mv.x -= movingBlockSpeed
+
+def deathFunc():
+    startLevel = True
+    deaths += 1
+    death.pause()
+    death.currentTime = 0
+    death.play()
 
 def input(key):
     if key == 'space':
@@ -439,18 +441,17 @@ def levelFinished():
     blockThree = Block(x=.9,y=.2)
     tutorialPop.play()
     lf1=Text(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
-    after 2s:
-        localStorage.setItem("Interacted", "1")
-        window.parent.postMessage("user-interacted", "*")
-        destroy(lf1)
+    after 2s:        destroy(lf1)
         tutorialPop.play()
         lf2=Text(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
         after 10s:
             destroy(lf2)
             currentLevel = 0
             localStorage.setItem('curentLevel', currentLevel)
+            localStorage.setItem("Interacted", "1")
+            window.parent.postMessage("user-interacted", "*")
             location.reload()
-
+    
 # Level loading
 ##
 currentLevel = localStorage.getItem('curentLevel')
@@ -570,27 +571,30 @@ if currentLevel == "0":
 l1 = Button(scale=3, color=color.black, text_color='white', text="Level 1 complete!", z=-9)
 l1.enabled = False
 l1.on_click = def():
-    l1.enabled = False
-    collider_objects = []  
-    moving_blocks = []
-    level2()
+    after 1.2s:
+        l1.enabled = False
+        collider_objects = []  
+        moving_blocks = []
+        level2()
 
 l2 = Button(scale=3, color=color.black, text_color='white', text=`Level 2 complete!`, z=-9)
 l2.enabled = False
 l2.on_click = def():
-    l2.enabled = False
-    collider_objects = []  
-    moving_blocks = []
-    laserbeams = []
-    level3()
+    after 1.2s:
+        l2.enabled = False
+        collider_objects = []  
+        moving_blocks = []
+        laserbeams = []
+        level3()
 
 l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!", z=-9)
 l3.enabled = False
 l3.on_click = def():
-    l3.enabled = False
-    collider_objects = []  
-    moving_blocks = []
-    levelFinished()
+    after 1.2s:
+        l3.enabled = False
+        collider_objects = []  
+        moving_blocks = []
+        levelFinished()
 
 
 # Mobile controls section
