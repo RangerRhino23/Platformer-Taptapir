@@ -634,6 +634,7 @@ if currentLevel == "0":
     intro_part_1 = Button(scale=3, color=color.black, text_color='white', text='Welcome to the GAME!\n\n click to continue', z=-10)
     intro_part_1.on_click = def():
         intro_part_1.enabled = False
+        set_fullscreen(True)
 
     # Major nesting going down here
     intro_part_2 = Button(texture='textures/the lads.png',scale=2, color=color.black, text_color='white', text='A game made by RangerRhino23 and Itsbailey X3525.', z=-9)
