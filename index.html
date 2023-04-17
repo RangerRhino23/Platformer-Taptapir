@@ -71,6 +71,9 @@ FinishedLevelOne = False
 FinishedLevelTwo = False
 FinishedLevelThree = False
 TutorialJump = True
+cameFromLevel1=False
+cameFromLevel2=False
+cameFromLevel3=False
 
 #Block Class
 def Block(x=0,y=0,texture='textures/grass_side.png'):
@@ -340,7 +343,8 @@ def flag():
 # Level Two #
 #############
 def level2():
-    destroy(hiddenButtonOne)
+    if cameFromLevel1:
+        destroy(hiddenButtonOne)
     canMove=True
     startLevel=True
     after 20s:
@@ -387,7 +391,8 @@ def flag2():
 # Level Three #
 ###############
 def level3():
-    destroy(hiddenButtonTwo)
+    if cameFromLevel2:
+        destroy(hiddenButtonTwo)
     canMove=True
     startLevel=True
     after 20s:
@@ -433,7 +438,8 @@ def flag3():
 # Level Finished #
 ##################
 def levelFinished():
-    destroy(hiddenButtonThree)
+    if cameFromLevel3:
+        destroy(hiddenButtonThree)
     canMove=True
     startLevel=True
     blockOne = Block(x=0.1,y=0.15)
@@ -474,13 +480,14 @@ if currentLevel == "0":
     Tutorial()
 if currentLevel == "1":
     level1()
-    startGame.enabled=True
+    startGame.enabled = True
 if currentLevel == "2":
     level2()
-    startGame.enabled=True
+    print("loaded level 2")
+    startGame.enabled = True
 if currentLevel == "3":
     level3()
-    startGame.enabled=True
+    startGame.enabled = True
 if currentLevel == "4":
     levelFinished()
 
@@ -587,6 +594,7 @@ l1.on_click = def():
         l1.enabled = False
         collider_objects = []  
         moving_blocks = []
+        cameFromLevel1=True
         level2()
 
 l2 = Button(scale=3, color=color.black, text_color='white', text='Level 2 complete!\n\n click to continue', z=-9)
@@ -597,6 +605,7 @@ l2.on_click = def():
         collider_objects = []  
         moving_blocks = []
         laserbeams = []
+        cameFromLevel2=True
         level3()
 
 l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!\n\n click to continue", z=-9)
@@ -606,6 +615,7 @@ l3.on_click = def():
         l3.enabled = False
         collider_objects = []  
         moving_blocks = []
+        cameFromLevel3=True
         levelFinished()
 
 
