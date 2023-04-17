@@ -493,6 +493,7 @@ if currentLevel == "3":
 if currentLevel == "4":
     levelFinished()
 
+eVar=False  
 def MobileTutorial():
     tutorialPop.play()
     tut1=Text(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
@@ -516,11 +517,40 @@ def MobileTutorial2():
         tut5=Text(text='Move around by gliding the joystick left and right.',color=color.clear,parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
-        after 3s:
-            blockFour = Block(x=.19,y=0.15)
-            blockFive = Block(x=0.24,y=0.15)
-            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
+        blockFour = Block(x=.19,y=0.15)
+        blockFive = Block(x=0.23,y=0.15)
+        updateHandlerForMobileControlsForTutorial=Entity(alpha=0,update=TestMovementMobile)
 
+eggandBaconSandwich=False
+def TestMovementMobile():
+    if mobileMoveButton.x > -0.7 or mobileMoveButton < -0.78:
+        after 2s and not eggandBaconSandwich:
+            MobileTutorial3()
+            eggandBaconSandwich=True
+            
+def MobileTutorial3():
+    destroy(tut5)
+    tutorialPop.play()
+    tut6 = Text(text="Nice moving, you're a natural!",color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut6)
+        tutorialPop.play()
+        tut7=Text(text="There are a few obstacles about.",color=color.clear,parent=camera,y=-.25,x=.1)
+        after 2s:
+            destroy(tut7)
+            tutorialPop.play()
+            tut8=Text(text="For example, this moving block.",color=color.clear,parent=camera,y=-.25,x=.3)
+            movingPlatformOne =  Moving_Block(x=0.3,y=.15,fromX=.3,toX=.5)
+            after 3s:
+                destroy(tut8)
+                tut9=Text(text="That's enough about that.",color=color.clear,parent=camera,y=-.25,x=.3)
+                tutorialPop.play()
+                after 2s:
+                    destroy(tut9)
+                    tut9=Text(text="Let's move onto the main game!",color=color.clear,parent=camera,y=-.25,x=.3)
+                    after 2s:
+                        TutorialFlagStuff()
+                    
 def ComputerTutorial():
     tutorialPop.play()
     tut1=Text(text='Hi.',color=color.clear,parent=camera,y=-.25,x=.3)
@@ -544,19 +574,46 @@ def ComputerTutorial2():
         tut5=Text(text='Move around with "A" and "D"',color=color.clear,parent=camera,y=-.25,x=.3)
         blockTwo = Block(x=0.145,y=0.15)
         blockThree = Block(x=0.07,y=0.15)
-        after 3s:
-            blockFour = Block(x=.19,y=0.15)
-            blockFive = Block(x=0.24,y=0.15)
-            TfinishFlag=Entity(update=TutorialFlagStuff,scale=[0.05,0.1],texture='textures/finish.png',x=0.24,y=0.21)
+        blockFour = Block(x=.19,y=0.15)
+        blockFive = Block(x=0.23,y=0.15)
+        inputHandlerForComputerControlsForTutorial=Entity(alpha=0,input=TestMovementComputer)
 
-eVar=False
+def TestMovementComputer():
+    if key == 'a' or key == 'd':
+        after 2s:
+            if not eggandBaconSandwich:
+                ComputerTutorial3()
+                eggandBaconSandwich=True
+
+def ComputerTutorial3():
+    destroy(tut5)
+    tutorialPop.play()
+    tut6 = Text(text="Nice moving, you're a natural!",color=color.clear,parent=camera,y=-.25,x=.3)
+    after 2s:
+        destroy(tut6)
+        tutorialPop.play()
+        tut7=Text(text="There are a few obstacles about.",color=color.clear,parent=camera,y=-.25,x=.1)
+        after 2s:
+            destroy(tut7)
+            tutorialPop.play()
+            tut8=Text(text="For example, this moving block.",color=color.clear,parent=camera,y=-.25,x=.3)
+            movingPlatformOne =  Moving_Block(x=0.3,y=.15,fromX=.3,toX=.5)
+            after 3s:
+                destroy(tut8)
+                tut9=Text(text="That's enough about that.",color=color.clear,parent=camera,y=-.25,x=.3)
+                tutorialPop.play()
+                after 2s:
+                    destroy(tut9)
+                    tut9=Text(text="Let's move onto the main game!",color=color.clear,parent=camera,y=-.25,x=.3)
+                    after 2s:
+                        TutorialFlagStuff()
+
 def TutorialFlagStuff():
     currentLevel = 1
     localStorage.setItem('curentLevel', currentLevel)
-    dist=distance(player.xy,TfinishFlag.xy)
-    if dist<=0.022 and not eVar:
+    if not eVar:
         eVar=True
-        destroy(tut5)
+        destroy(tut9)
         bg_music.pause()
         bg_music.currentTime = 0
         complete.play()
@@ -567,8 +624,9 @@ def TutorialFlagStuff():
             destroy(e)
         TutorialComplete.on_click = def():
             collider_objects = []
+            moving_blocks = []
             level1()
-            destroy(TfinishFlag)
+            destroy(movingPlatformOne)
             destroy(TutorialComplete)
 
 # Misc stuff    
