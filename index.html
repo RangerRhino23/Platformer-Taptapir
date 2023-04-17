@@ -441,17 +441,18 @@ def levelFinished():
     blockThree = Block(x=.9,y=.2)
     tutorialPop.play()
     lf1=Text(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
-    after 2s:        destroy(lf1)
+    after 2s:
+        destroy(lf1)
         tutorialPop.play()
         lf2=Text(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
         after 10s:
             destroy(lf2)
             currentLevel = 0
-            localStorage.setItem('curentLevel', currentLevel)
             localStorage.setItem("Interacted", "1")
             window.parent.postMessage("user-interacted", "*")
+            localStorage.setItem('curentLevel', currentLevel)
             location.reload()
-    
+
 # Level loading
 ##
 currentLevel = localStorage.getItem('curentLevel')
