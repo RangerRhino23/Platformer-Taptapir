@@ -302,6 +302,7 @@ def level1():
     startLevel=True
     after 20s:
         hiddenButtonOne = Button(x=0,y=0.25,scale=.05,color=color.gray, parent=scene, alpha=0.25)
+        cameFromLevel1=True
         hiddenButtonOne.on_click = def():
             tutorialPop.play()
             hiddenbuttoncounter += 1
@@ -347,6 +348,7 @@ def level2():
     canMove=True
     startLevel=True
     after 20s:
+        cameFromLevel2=True
         hiddenButtonTwo = Button(x=.55,y=0.6,scale=.05,color=color.gray, parent=scene, alpha=0.25)
         hiddenButtonTwo.on_click = def():
             tutorialPop.play()
@@ -395,6 +397,7 @@ def level3():
     canMove=True
     startLevel=True
     after 20s:
+        cameFromLevel3=True
         hiddenButtonThree = Button(x=.75,y=0.8,scale=.05,color=color.gray, parent=scene, alpha=0.25)
         hiddenButtonThree.on_click = def():
             tutorialPop.play()
@@ -594,7 +597,6 @@ l1.on_click = def():
         l1.enabled = False
         collider_objects = []  
         moving_blocks = []
-        cameFromLevel1=True
         level2()
 
 l2 = Button(scale=3, color=color.black, text_color='white', text='Level 2 complete!\n\n click to continue', z=-9)
@@ -606,7 +608,6 @@ l2.on_click = def():
         collider_objects = []  
         moving_blocks = []
         laserbeams = []
-        cameFromLevel2=True
         level3()
 
 l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!\n\n click to continue", z=-9)
@@ -617,7 +618,6 @@ l3.on_click = def():
         l3.enabled = False
         collider_objects = []  
         moving_blocks = []
-        cameFromLevel3=True
         levelFinished()
 
 
