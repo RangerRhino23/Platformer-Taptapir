@@ -340,6 +340,7 @@ def flag():
 # Level Two #
 #############
 def level2():
+    destroy(hiddenButtonOne)
     canMove=True
     startLevel=True
     after 20s:
@@ -386,6 +387,7 @@ def flag2():
 # Level Three #
 ###############
 def level3():
+    destroy(hiddenButtonTwo)
     canMove=True
     startLevel=True
     after 20s:
@@ -431,6 +433,7 @@ def flag3():
 # Level Finished #
 ##################
 def levelFinished():
+    destroy(hiddenButtonThree)
     canMove=True
     startLevel=True
     blockOne = Block(x=0.1,y=0.15)
@@ -461,15 +464,23 @@ if currentLevel == null:
     localStorage.setItem('curentLevel', currentLevel)
     location.reload()
 
+startGame = Button(scale=3, color=color.black, text_color='white', text="Click to start!", z=-9)
+startGame.enabled=False
+startGame.on_click = def():
+    startGame.enabled = False
+    bg_music.play()
 
 if currentLevel == "0":
     Tutorial()
 if currentLevel == "1":
     level1()
+    startGame.enabled=True
 if currentLevel == "2":
     level2()
+    startGame.enabled=True
 if currentLevel == "3":
     level3()
+    startGame.enabled=True
 if currentLevel == "4":
     levelFinished()
 
@@ -569,7 +580,7 @@ if currentLevel == "0":
             ComputerTutorial()
         }
 
-l1 = Button(scale=3, color=color.black, text_color='white', text="Level 1 complete!", z=-9)
+l1 = Button(scale=3, color=color.black, text_color='white', text="Level 1 complete!\n\n click to continue", z=-9)
 l1.enabled = False
 l1.on_click = def():
     after 1.2s:
@@ -578,7 +589,7 @@ l1.on_click = def():
         moving_blocks = []
         level2()
 
-l2 = Button(scale=3, color=color.black, text_color='white', text=`Level 2 complete!`, z=-9)
+l2 = Button(scale=3, color=color.black, text_color='white', text='Level 2 complete!\n\n click to continue', z=-9)
 l2.enabled = False
 l2.on_click = def():
     after 1.2s:
@@ -588,7 +599,7 @@ l2.on_click = def():
         laserbeams = []
         level3()
 
-l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!", z=-9)
+l3 = Button(scale=3, color=color.black, text_color='white', text="Level 3 complete!\n\n click to continue", z=-9)
 l3.enabled = False
 l3.on_click = def():
     after 1.2s:
