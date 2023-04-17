@@ -440,8 +440,8 @@ def levelFinished():
     tutorialPop.play()
     lf1=Text(text='Congrats! You finished!',color=color.clear,parent=camera,y=-.25,x=.3)
     after 2s:
-        localStorage.setItem("Interacted", "1");
-        window.parent.postMessage("user-interacted", "*");
+        localStorage.setItem("Interacted", "1")
+        window.parent.postMessage("user-interacted", "*")
         destroy(lf1)
         tutorialPop.play()
         lf2=Text(text='Thanks for playing!',color=color.clear,parent=camera,y=-.25,x=.3)
