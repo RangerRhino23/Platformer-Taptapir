@@ -18,6 +18,8 @@ function compile(script) {
     strings = []
     string_index = 0
     const regexp = '\'(.*?)\'';
+    const regexp_backtick = '\`(.*?)\`';
+
     extra_replacements = []
     is_in_merge_lines_mode = false;
 
@@ -35,9 +37,9 @@ function compile(script) {
         if (all_lines[i].includes(': #')) {
             all_lines[i] = all_lines[i].split(': #')[0] + ':'
         }
-        // if (all_lines[i].trimStart().startsWith('define(')) {}
         // remove text so it doesn't get parsed as code.
         quotes = [...all_lines[i].matchAll(regexp)];
+        quotes.push(...all_lines[i].matchAll(regexp_backtick))
 
         for (var j=0; j<quotes.length; j++) {
             if (quotes[j][1].length > 0) {
@@ -93,7 +95,6 @@ function compile(script) {
         lines[i] = lines[i].replaceAll('.sum()', '.reduce((a, b) => a + b, 0)')
         lines[i] = lines[i].replaceAll('[-1]', '.at(-1)')
         lines[i] = lines[i].replaceAll(' # ', ' //')   // comments
-
 
         // list comprehention
         if (lines[i].includes('[') && lines[i].includes(']') && lines[i].includes(' for ') && lines[i].includes(' in ') && !lines[i].endsWith(':')) {
@@ -208,12 +209,10 @@ function compile(script) {
         }
 
         for (var class_name of ['Entity', 'Button', 'Text', 'HealthBar', 'RainbowSlider', 'InputField']) {
-            if (lines[i].includes(`${class_name}({`)) {
-                continue
-            }
-            if (lines[i].includes(`${class_name}(`)) {
+            is_first_word = lines[i].startsWith(`${class_name}(`) ? '' : ' '        // don't add space if line starts with 'Entity(', do add otherwise, to ensure we match the whole name
+            if (lines[i].includes(`${is_first_word}${class_name}(`)) {
+                lines[i] = lines[i].replace(`${is_first_word}${class_name}(`, `${is_first_word}new ${class_name}(`)
                 lines[i] = convert_arguments(lines[i], class_name)
-                lines[i] = lines[i].replace(`${class_name}(`, `new ${class_name}(`)
             }
         }
 
@@ -259,6 +258,11 @@ function compile(script) {
         }
     }
 
+    new_line = ''
+    for (var j of range(current_indent)) {
+        new_line += '' + '    '.repeat(current_indent-1) + '}'
+    }
+    lines.push(new_line)
 
     var compiled_code = lines.join('\n')
 
@@ -267,7 +271,7 @@ function compile(script) {
         compiled_code = compiled_code.replace(`[TEXT_CONTENT_${i}]`, `'${strings[i]}'`)
     }
 
-    // print('COMPILED CODE:', compiled_code)
+    print('COMPILED CODE:', compiled_code)
     print('compiled in', performance.now() - t, 'ms')
     return compiled_code
 }
@@ -321,18 +325,8 @@ function convert_arguments(line, class_name) {
                 variable_name = variable_name.slice(4)
             }
             new_arguments = `name='${variable_name}', ${new_arguments}`
-            // print('variable_name:', variable_name)
-            // if line.includes(`= ${class_name}`) {
-                //
-                // }
-
         }
     }
-    // print('-cccccccccccccc-', keys)
-    // if ('name'  new_arguments) {
-    //
-    // }
-
     js_style_arguments = '{' + new_arguments.replaceAll('=', ':') + '}'
 
     if (has_inline_function) {
@@ -365,8 +359,10 @@ abs = Math.abs
 floor = Math.floor
 ceil = Math.ceil
 math = Math
-round = Math.round
 sqrt = Math.sqrt
+function round(value, digits=0) {
+    return Number(Math.round(value+'e'+digits)+'e-'+digits);
+}
 
 function enumerate(list) {
     if (typeof list === 'array') {
@@ -455,8 +451,5 @@ for (var script of scripts) {
             compiled_code = compile(script.textContent)
             eval(compiled_code)
         }
-        // else if (script.href) {
-        //     print(script)
-        // }
     }
 }
