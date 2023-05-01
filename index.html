@@ -89,8 +89,8 @@ def Moving_Block(x=0,y=0,fromX=0.8,toX=1.2,texture='textures/moving_platform.png
 
 #Laserbeam Class
 def Laserbeam(x=0,y=0):
-    laserHold=Entity(x=x,y=y,z=player.z,color=color.gray,scale=0.05,z=-1)
-    laserbeam=Entity(x=x-0.0005,y=y-.1465,scale=[0.025,0.25],color=color.red,z=1)
+    laserHold = Entity(x=x,y=y,z=player.z,color=color.gray,scale=0.05,z=-1)
+    laserbeam = Entity(x=x-0.0005,y=y-.1465,scale=[0.025,0.25],color=color.red,z=1)
     collider_objects.append(laserHold)
     laserbeams.append(laserbeam)
     return laserbeam, laserHold
@@ -115,7 +115,7 @@ Entity(update=LaserbeamFunc,x=-9999999)
 
 # Lever Class
 def Lever(x=0,y=0.15):
-    lever=Entity(flipped=False,x=x,y=y,texture='textures/lever_on.png',scale=[.035,.06])
+    lever = Entity(flipped=False,x=x,y=y,texture='textures/lever_on.png',scale=[.035,.06])
     levers.append(lever)
     return levers
 
@@ -139,7 +139,7 @@ def update():
     #Hidden Buttons
     if hiddenbuttoncounter == 3:
         hiddenbuttoncounter += 1
-        glitch=Entity(texture='textures/regular sus.gif',parent=camera)
+        glitch = Entity(texture='textures/regular sus.gif',parent=camera)
         bg_music.pause()
         seperateAudio.play()
         canMove = False
@@ -165,7 +165,6 @@ def update():
     #Collision Detection
     for e in collider_objects:
         if player.x>=e.x-0.05 and player.x<=e.x and player.y == e.y and player.y>=e.y+.5:
-            #Entity(e.y+0.049)
             collidingRight=True
         else:
             after 0.1s:
@@ -272,8 +271,8 @@ def JumpFunc():
 
 player = Entity(texture='textures/player_right.png', scale=0.05)
 
-textureHolder1=Entity(scale=.1,x=999999999999,texture='textures/player_right.png')
-textureHolder2=Entity(scale=.1,x=999999999999,texture='textures/player_left.png')
+textureHolder1 = Entity(scale=.1,x=999999999999,texture='textures/player_right.png')
+textureHolder2 = Entity(scale=.1,x=999999999999,texture='textures/player_left.png')
 
 sky = Entity(texture='textures/sky.png', scale=[1.8,1.005], z=10)
 
@@ -519,7 +518,7 @@ def MobileTutorial2():
         blockThree = Block(x=0.07,y=0.15)
         blockFour = Block(x=.19,y=0.15)
         blockFive = Block(x=0.23,y=0.15)
-        updateHandlerForMobileControlsForTutorial=Entity(alpha=0,update=TestMovementMobile)
+        updateHandlerForMobileControlsForTutorial = Entity(alpha=0,update=TestMovementMobile)
 
 eggandBaconSandwich=False
 def TestMovementMobile():
@@ -577,7 +576,7 @@ def ComputerTutorial2():
         blockThree = Block(x=0.07,y=0.15)
         blockFour = Block(x=.19,y=0.15)
         blockFive = Block(x=0.23,y=0.15)
-        inputHandlerForComputerControlsForTutorial=Entity(alpha=0,input=TestMovementComputer)
+        inputHandlerForComputerControlsForTutorial = Entity(alpha=0,input=TestMovementComputer)
 
 def TestMovementComputer():
     if key == 'a' or key == 'd':
@@ -707,9 +706,9 @@ def MobileControlsFunc():
 def MobileControls()
     Entity(update=MobileControlsFunc,alpha=0)
     mobileMoveButton = Button(draggable=True,x=-0.7,y=-0.3,color=color.white,scale=.2)
-    mobileMoveButtonLeft=Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
-    mobileMoveButtonRight=Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
-    mobileMoveButtonUp=Entity(alpha=0,x=-0.39,y=-0.18,scale=.01,parent=camera)
+    mobileMoveButtonLeft = Entity(alpha=0,x=-0.3,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonRight = Entity(alpha=0,x=-0.48,y=-0.3,scale=.01,parent=camera)
+    mobileMoveButtonUp = Entity(alpha=0,x=-0.39,y=-0.18,scale=.01,parent=camera)
 
 print("Why you looking here")
 
